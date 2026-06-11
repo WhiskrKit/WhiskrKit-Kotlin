@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="whiskrkit_submit">Submit</string>
+    <string name="whiskrkit_close">Close</string>
+    <string name="whiskrkit_required">Required</string>
+    <string name="whiskrkit_give_feedback">Give feedback</string>
+    <string name="whiskrkit_no_thanks">No, thanks</string>
+    <string name="whiskrkit_thumbs_up">Yes</string>
+    <string name="whiskrkit_thumbs_down">No</string>
+    <string name="whiskrkit_survey">Survey</string>
+
+    <string name="whiskrkit_required_scale">Select a rating between %1$d and %2$d</string>
+    <string name="whiskrkit_required_symbol">Select a rating between %1$d and %2$d stars</string>
+    <string name="whiskrkit_required_thumbs">Select one of the options</string>
+    <string name="whiskrkit_required_text">This field is required</string>
+    <string name="whiskrkit_required_choice">Select at least one option</string>
+
+    <string name="whiskrkit_char_count">%1$d/%2$d</string>
+
+    <string name="whiskrkit_a11y_selected">Selected</string>
+    <string name="whiskrkit_a11y_not_selected">Not selected</string>
+    <string name="whiskrkit_a11y_score">Score %1$d</string>
+    <string name="whiskrkit_a11y_x_out_of_y">%1$d out of %2$d</string>
+    <string name="whiskrkit_a11y_star">%1$d stars</string>
+    <string name="whiskrkit_a11y_text_field">Feedback text field</string>
+    <string name="whiskrkit_a11y_text_max">Maximum %1$d characters</string>
+</resources>

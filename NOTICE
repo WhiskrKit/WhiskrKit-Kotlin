@@ -1,0 +1,8 @@
+WhiskrKit for Android
+Copyright (c) 2026 Dennis Vermeulen
+
+This product bundles icon path data from Material Icons by Google
+(https://fonts.google.com/icons), licensed under the Apache License,
+Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+The icons are embedded as vector path data in
+whiskrkit/src/main/kotlin/eu/whiskrkit/ui/WhiskrIcons.kt.
