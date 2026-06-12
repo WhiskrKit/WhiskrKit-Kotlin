@@ -15,9 +15,8 @@ import kotlinx.serialization.json.jsonPrimitive
  * Top-level survey template — one of three presentation modes, discriminated by
  * the `template` wire field (`sheet` / `fullScreenForm` / `toast`).
  *
- * The wire value `toast` is fixed by the backend; on Android the concept is
- * called "banner" in code and docs to avoid confusion with `android.widget.Toast`
- * (decision #3).
+ * The wire value `toast` is fixed by the backend; in code and docs the concept
+ * is called "banner" to avoid confusion with `android.widget.Toast`.
  */
 @Serializable(with = SurveyTemplateSerializer::class)
 internal sealed interface SurveyTemplate {
@@ -69,7 +68,7 @@ internal object SurveyTemplateSerializer :
 }
 
 /**
- * Applies the lenient-decoding rules (decision B1):
+ * Applies the lenient-decoding rules:
  * - unknown *optional* questions are silently dropped,
  * - an unknown *required* question invalidates the whole template (a submission
  *   missing a required answer would be incomplete from the backend's view),

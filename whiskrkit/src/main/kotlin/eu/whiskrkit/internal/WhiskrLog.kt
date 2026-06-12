@@ -3,9 +3,8 @@ package eu.whiskrkit.internal
 import android.util.Log
 
 /**
- * Tiny internal logger mirroring the iOS OSLog categories
- * (Core / UI / Networking / Cache) without imposing a logging
- * framework on host apps.
+ * Tiny internal logger with categories (Core / UI / Networking / Cache)
+ * that avoids imposing a logging framework on host apps.
  */
 internal object WhiskrLog {
     private const val TAG = "WhiskrKit"

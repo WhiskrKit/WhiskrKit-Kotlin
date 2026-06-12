@@ -10,11 +10,11 @@ import androidx.compose.ui.unit.dp
 /**
  * Visual customisation for WhiskrKit surveys.
  *
- * Every field is optional (decision #10, hybrid theming): anything you leave
- * unset resolves from the ambient [androidx.compose.material3.MaterialTheme]
- * at presentation time, so an unthemed WhiskrKit already matches a Material 3
- * app — including dark mode and dynamic color. Pass an instance to
- * [eu.whiskrkit.ui.WhiskrKitHost] to override selectively:
+ * Every field is optional: anything you leave unset resolves from the ambient
+ * [androidx.compose.material3.MaterialTheme] at presentation time, so an
+ * unthemed WhiskrKit already matches a Material 3 app — including dark mode
+ * and dynamic color. Pass an instance to [eu.whiskrkit.ui.WhiskrKitHost] to
+ * override selectively:
  *
  * ```kotlin
  * WhiskrKitHost(
@@ -64,11 +64,7 @@ public class WhiskrKitTheme(
         public val secondary: ButtonAppearance? = null,
     )
 
-    /**
-     * Either a pre-baked [Variant] or a fully [Custom] composable slot — the
-     * Compose counterpart of the iOS custom `ButtonStyle` escape hatch
-     * (decision #12).
-     */
+    /** Either a pre-baked [Variant] or a fully [Custom] composable slot. */
     @Immutable
     public sealed class ButtonAppearance {
         public class Variant(public val variant: ButtonVariant) : ButtonAppearance()
@@ -78,11 +74,7 @@ public class WhiskrKitTheme(
         ) : ButtonAppearance()
     }
 
-    /**
-     * Note for iOS parity readers: the iOS `ButtonVariant` also accepted a
-     * `size` parameter that was never stored; it is intentionally absent here
-     * (decision P2).
-     */
+    /** Colors, typography and shape for the built-in button rendering. */
     @Immutable
     public class ButtonVariant(
         public val backgroundColor: Color = Color.Unspecified,
@@ -105,7 +97,7 @@ public class WhiskrKitTheme(
         public val backgroundColor: Color = Color.Unspecified,
     )
 
-    /** Styling for the banner container ("toast" in iOS terminology). */
+    /** Styling for the banner container. */
     @Immutable
     public class BannerTheme(
         public val cornerRadius: Dp = 12.dp,

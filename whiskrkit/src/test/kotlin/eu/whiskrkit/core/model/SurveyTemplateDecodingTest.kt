@@ -102,7 +102,7 @@ class SurveyTemplateDecodingTest {
         assertEquals(original, decode(encoded))
     }
 
-    // region Lenient decoding (decision B1)
+    // region Lenient decoding of unknown question types
 
     @Test
     fun `unknown optional question is dropped from full screen form`() {

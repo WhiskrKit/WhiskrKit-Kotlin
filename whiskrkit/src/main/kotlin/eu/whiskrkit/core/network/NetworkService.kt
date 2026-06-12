@@ -23,10 +23,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import eu.whiskrkit.internal.DeviceInfo
 
-/**
- * The three backend endpoints, abstracted for testability (the iOS coordinator
- * depends on the concrete NetworkService; the seam here replaces that).
- */
+/** The three backend endpoints, abstracted for testability. */
 internal interface SurveyApi {
     suspend fun fetchSurvey(identifier: String): SurveyTemplate
 
@@ -43,9 +40,9 @@ internal interface SurveyApi {
 }
 
 /**
- * OkHttp port of the iOS `NetworkService`: 30 s timeouts, up to [MAX_RETRIES]
- * retries with exponential backoff (1 s, 2 s) on 429/5xx/transport errors,
- * 4xx mapped to typed errors and never retried.
+ * OkHttp-backed [SurveyApi]: 30 s timeouts, up to [MAX_RETRIES] retries with
+ * exponential backoff (1 s, 2 s) on 429/5xx/transport errors, 4xx mapped to
+ * typed errors and never retried.
  */
 internal class NetworkService(
     private val baseUrl: HttpUrl,

@@ -34,10 +34,8 @@ import eu.whiskrkit.core.model.SurveyAnswer
 import eu.whiskrkit.theme.LocalWhiskrKitTheme
 
 /**
- * NPS-style numeric scale. Uses an adaptive FlowRow instead of the iOS
- * fixed two-row split (decision #7). Tapping the selected score deselects it
- * and removes the answer (iOS keeps the stale value in the response — fixed
- * here, consistent with the thumbs question).
+ * NPS-style numeric scale laid out as an adaptive FlowRow. Tapping the
+ * selected score deselects it and removes the answer.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -121,7 +119,7 @@ internal fun ScaleRatingQuestion(
     }
 }
 
-/** Red → yellow → green interpolation, same math as the iOS `interpolatedColor`. */
+/** Red → yellow → green interpolation across the rating range. */
 private fun scaleColor(score: Int, range: ScaleRatingTemplate.RatingRange): Color {
     val span = (range.max - range.min).coerceAtLeast(1)
     val progress = (score - range.min).toFloat() / span

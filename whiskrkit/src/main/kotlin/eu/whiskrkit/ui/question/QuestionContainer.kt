@@ -21,9 +21,8 @@ import eu.whiskrkit.ui.WhiskrIcons
 import eu.whiskrkit.theme.LocalWhiskrKitTheme
 
 /**
- * Shared header chrome for every question — the port of the iOS
- * `RatingContainerView`: title, an italic "Required" tag that wraps to its own
- * line when space is tight (FlowRow replaces iOS `ViewThatFits`), and subtitle.
+ * Shared header chrome for every question: title, an italic "Required" tag
+ * that wraps to its own line when space is tight, and subtitle.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

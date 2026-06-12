@@ -27,7 +27,7 @@ internal object SubmissionQueueConfig {
 
 /**
  * A failed submission waiting for retry. Immutable; retry bookkeeping uses
- * [withRetryAttempt] (the iOS struct mutates in place instead).
+ * [withRetryAttempt].
  */
 @Serializable
 internal data class PendingSubmission(

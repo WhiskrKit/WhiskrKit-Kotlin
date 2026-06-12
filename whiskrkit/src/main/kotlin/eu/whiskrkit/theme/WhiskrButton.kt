@@ -14,7 +14,7 @@ internal enum class WhiskrButtonKind { Primary, Secondary }
 
 /**
  * Renders the primary/secondary survey button per the resolved theme — either
- * the built-in variant rendering or the host's custom slot (decision #12).
+ * the built-in variant rendering or the host's custom slot.
  */
 @Composable
 internal fun WhiskrButton(

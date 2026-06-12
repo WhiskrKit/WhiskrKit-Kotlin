@@ -11,10 +11,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
- * The fully-resolved theme used by all WhiskrKit composables. Resolution
- * (decision #10): host-provided [WhiskrKitTheme] overrides win; unset fields
- * fall back to the ambient MaterialTheme at the host's position in the
- * composition, so defaults track dark mode and dynamic color automatically.
+ * The fully-resolved theme used by all WhiskrKit composables. Resolution:
+ * host-provided [WhiskrKitTheme] overrides win; unset fields fall back to the
+ * ambient MaterialTheme at the host's position in the composition, so defaults
+ * track dark mode and dynamic color automatically.
  */
 @Immutable
 internal data class ResolvedWhiskrTheme(
@@ -56,7 +56,7 @@ internal sealed interface ResolvedButtonAppearance {
     ) : ResolvedButtonAppearance
 }
 
-/** Internal per decision #13; hosts theme via `WhiskrKitHost(theme = ...)`. */
+/** Deliberately internal; hosts theme via `WhiskrKitHost(theme = ...)`. */
 internal val LocalWhiskrKitTheme = staticCompositionLocalOf<ResolvedWhiskrTheme> {
     error("No WhiskrKitTheme provided — WhiskrKit composables must run inside WhiskrKitHost.")
 }

@@ -5,9 +5,8 @@ import android.os.Build
 import java.util.Locale
 
 /**
- * Host app and device facts sent as request headers; the Android counterpart of
- * the iOS `addCommonHeaders` values. `deviceId` is supplied lazily because it is
- * generated and owned by the eligibility storage (decision #16).
+ * Host app and device facts sent as request headers. `deviceId` is supplied
+ * lazily because it is generated and owned by the eligibility storage.
  */
 internal class DeviceInfo(
     context: Context,
@@ -31,7 +30,7 @@ internal class DeviceInfo(
     val osVersion: String = Build.VERSION.RELEASE ?: "unknown"
     val deviceModel: String = Build.MODEL ?: "unknown"
 
-    /** Hardware identifier in the spirit of iOS's "iPhone14,2" (decision B3). */
+    /** Hardware identifier reported to the backend for analytics. */
     val deviceIdentifier: String = "${Build.MANUFACTURER} ${Build.MODEL}".trim()
 
     val localeTag: String get() = Locale.getDefault().toLanguageTag()

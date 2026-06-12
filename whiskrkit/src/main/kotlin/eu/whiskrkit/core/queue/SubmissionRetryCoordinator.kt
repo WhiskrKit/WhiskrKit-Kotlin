@@ -5,9 +5,9 @@ import eu.whiskrkit.core.network.WhiskrKitException
 import eu.whiskrkit.internal.WhiskrLog
 
 /**
- * Retries queued submissions, ported from iOS. Lifecycle triggers (app
- * foreground, connectivity restored) are registered by [eu.whiskrkit.WhiskrKit]
- * at initialize time — the coordinator itself stays free of Android plumbing.
+ * Retries queued submissions. Lifecycle triggers (app foreground, connectivity
+ * restored) are registered by [eu.whiskrkit.WhiskrKit] at initialize time —
+ * the coordinator itself stays free of Android plumbing.
  */
 internal class SubmissionRetryCoordinator(
     private val queue: SubmissionQueue,

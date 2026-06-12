@@ -2,7 +2,7 @@ package eu.whiskrkit.core.network
 
 import java.io.IOException
 
-/** Mirrors the iOS `WhiskrKitError`. Never escapes the SDK to the host app. */
+/** Internal SDK errors. They never escape the SDK to the host app. */
 internal sealed class WhiskrKitException(
     message: String? = null,
     cause: Throwable? = null,
@@ -22,7 +22,7 @@ internal sealed class WhiskrKitException(
     class HttpError(val statusCode: Int) : WhiskrKitException("HTTP error $statusCode")
     class NetworkError(cause: IOException) : WhiskrKitException("Network error", cause)
 
-    /** Retryable per the iOS retry policy: 429, 5xx, and transport errors. */
+    /** Retryable: 429, 5xx, and transport errors. */
     val isRetryable: Boolean
         get() = when (this) {
             is RateLimited, is ServerError, is NetworkError -> true

@@ -26,8 +26,7 @@ import eu.whiskrkit.ui.container.SheetContainer
 import eu.whiskrkit.ui.container.SurveyTemplateSaver
 
 /**
- * The attachment point for WhiskrKit surveys — the Compose counterpart of the
- * iOS `.whiskrKit()` view modifier.
+ * The attachment point for WhiskrKit surveys.
  *
  * Wrap your root content once, inside your `MaterialTheme`:
  *
@@ -67,8 +66,7 @@ public fun WhiskrKitHost(
 
 /**
  * Automatically checks eligibility for [identifier] and presents the survey if
- * the user qualifies — the Compose counterpart of the iOS
- * `.whiskrKitSurvey(identifier:)` modifier.
+ * the user qualifies.
  *
  * Place it on the screen where the survey should potentially appear; the check
  * runs when the composable enters the composition. Checks are deduplicated per
@@ -87,8 +85,8 @@ public fun WhiskrKitSurvey(identifier: String) {
 
 /**
  * Owns the currently presented survey. The active template survives
- * configuration changes and process death by round-tripping through its JSON
- * form (decision #9).
+ * configuration changes and process death by round-tripping through its
+ * JSON form.
  */
 @Composable
 private fun BoxScope.SurveyPresenter() {

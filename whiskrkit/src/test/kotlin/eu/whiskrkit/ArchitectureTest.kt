@@ -5,9 +5,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Enforces the layering from the architecture plan (decision #20): the core
- * packages stay Compose-free so a future core/compose module split is a
- * mechanical move, not a refactor.
+ * Enforces the SDK's layering: the core packages stay Compose-free so a
+ * future core/compose module split is a mechanical move, not a refactor.
  */
 class ArchitectureTest {
 

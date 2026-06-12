@@ -18,10 +18,6 @@ internal interface ConfigurationService {
     fun configure(apiKey: String)
 }
 
-/**
- * Note: the iOS `submitRating` also took an `identifier` parameter that was
- * always `""` and never reached the wire (decision B4). It is dropped here.
- */
 internal class WhiskrKitConfigurationService(
     private val networkService: NetworkService,
     private val submissionQueue: SubmissionQueue,

@@ -50,11 +50,10 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 /**
- * Banner presentation ("toast" on the wire, decision #3): a bottom-aligned
- * overlay card inside the host's Box (decision #3.1-toast/A), slide-in with
- * fade, swipe-down to dismiss. Either hosts an inline question with a compact
- * submit, or "Give feedback / No thanks" buttons where the primary opens a
- * follow-up survey by identifier.
+ * Banner presentation ("toast" on the wire): a bottom-aligned overlay card
+ * inside the host's Box, slide-in with fade, swipe-down to dismiss. Either
+ * hosts an inline question with a compact submit, or "Give feedback /
+ * No thanks" buttons where the primary opens a follow-up survey by identifier.
  */
 @Composable
 internal fun BoxScope.BannerHost(

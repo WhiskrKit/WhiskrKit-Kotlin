@@ -7,8 +7,8 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 
 /**
- * Wire-format tests: the encoded JSON must match the iOS `SurveyResponse`
- * encoding byte-for-byte — single-key tagged objects per answer.
+ * Wire-format tests: the encoded JSON must match the backend contract
+ * byte-for-byte — single-key tagged objects per answer.
  */
 class SurveyResponseSerializationTest {
 

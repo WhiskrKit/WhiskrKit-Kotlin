@@ -5,8 +5,8 @@ import eu.whiskrkit.core.serialization.IsoInstant
 import kotlinx.serialization.Serializable
 
 /**
- * Context sent with every eligibility check. Dates are ISO-8601, matching the
- * iOS SDK's `JSONEncoder.dateEncodingStrategy = .iso8601`.
+ * Context sent with every eligibility check. Dates are ISO-8601, as the
+ * backend expects.
  */
 @Serializable
 internal data class SurveyEligibilityContext(

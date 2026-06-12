@@ -27,7 +27,7 @@ android {
 
     buildTypes {
         release {
-            // Minified on purpose: verifies the SDK's consumer R8 rules (decision A6).
+            // Minified on purpose: verifies the SDK's consumer R8 rules.
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
         }

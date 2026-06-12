@@ -41,10 +41,9 @@ import eu.whiskrkit.ui.question.QuestionView
 import kotlinx.coroutines.launch
 
 /**
- * Full-screen presentation via a Compose Dialog with platform width disabled
- * (decision #2) — stays inside the host's composition so theme and
- * CompositionLocals propagate, and back-press dismisses without submitting
- * (decision A2).
+ * Full-screen presentation via a Compose Dialog with platform width disabled —
+ * stays inside the host's composition so theme and CompositionLocals
+ * propagate, and back-press dismisses without submitting.
  */
 @Composable
 internal fun FullScreenContainer(template: FullScreenFormTemplate, onDismiss: () -> Unit) {

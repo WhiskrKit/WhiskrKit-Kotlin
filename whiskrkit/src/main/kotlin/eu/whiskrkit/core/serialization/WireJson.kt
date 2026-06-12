@@ -16,8 +16,7 @@ import java.time.temporal.ChronoUnit
 /**
  * The single Json configuration used for everything that crosses the wire or is
  * persisted. `ignoreUnknownKeys` keeps old SDK versions tolerant of new backend
- * fields; `explicitNulls = false` omits null fields, matching the iOS SDK's
- * `encodeIfPresent` behaviour.
+ * fields; `explicitNulls = false` omits null fields, as the backend expects.
  */
 @OptIn(ExperimentalSerializationApi::class)
 internal val WireJson: Json = Json {
@@ -26,7 +25,7 @@ internal val WireJson: Json = Json {
 }
 
 /**
- * ISO-8601 instant serializer matching Swift's `.iso8601` strategy
+ * ISO-8601 instant serializer using the backend's date format
  * (`2026-06-11T12:00:00Z`, second precision, UTC).
  */
 internal object IsoInstantSerializer : KSerializer<Instant> {

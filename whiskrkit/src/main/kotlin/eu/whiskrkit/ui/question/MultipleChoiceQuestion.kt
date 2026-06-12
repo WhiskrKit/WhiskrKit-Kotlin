@@ -33,8 +33,8 @@ import eu.whiskrkit.theme.LocalWhiskrKitTheme
 /**
  * Single- or multi-select choice list. Uses real Checkbox/RadioButton
  * components and `selectable`/`toggleable` semantics so TalkBack announces
- * state changes natively (no manual announcements, improving on iOS).
- * Selections are stored as option *ids* (wire parity).
+ * state changes natively. Selections are stored as option *ids*, as the
+ * backend expects.
  */
 @Composable
 internal fun MultipleChoiceQuestion(
@@ -72,7 +72,7 @@ internal fun MultipleChoiceQuestion(
                             when {
                                 template.allowsMultiSelection && isSelected -> selectedIds - option.id
                                 template.allowsMultiSelection -> selectedIds + option.id
-                                isSelected -> emptyList() // single-select: tap again deselects (iOS parity)
+                                isSelected -> emptyList() // single-select: tap again deselects
                                 else -> listOf(option.id)
                             },
                         )

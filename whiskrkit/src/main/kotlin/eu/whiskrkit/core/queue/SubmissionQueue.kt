@@ -3,9 +3,8 @@ package eu.whiskrkit.core.queue
 import java.time.Instant
 
 /**
- * In-memory queue with persistent backing, ported from iOS. Not thread-safe by
- * design: all access is confined to the SDK's main-dispatcher scope, mirroring
- * the iOS `@MainActor` isolation.
+ * In-memory queue with persistent backing. Not thread-safe by design: all
+ * access is confined to the SDK's main-dispatcher scope.
  */
 internal class SubmissionQueue(
     private val storage: SubmissionStorage,

@@ -11,9 +11,9 @@ import java.time.Instant
 import java.util.UUID
 
 /**
- * Mirrors the iOS `EligibilityStorage` protocol. The device id is a
- * self-generated UUID (decision #16) — app-scoped, reset on uninstall or
- * clear-data, no permissions required.
+ * Persistent state backing eligibility checks. The device id is a
+ * self-generated UUID — app-scoped, reset on uninstall or clear-data,
+ * no permissions required.
  */
 internal interface EligibilityStorage {
     val deviceId: String

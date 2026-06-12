@@ -12,9 +12,9 @@ internal interface EligibilityService {
 }
 
 /**
- * Manages per-survey eligibility checks, ported from iOS: dedupes in-flight
- * checks, honours the server's `nextCheckAfter` cache hint and
- * `removeFromHistory`, and fails silently — the SDK never crashes the host app.
+ * Manages per-survey eligibility checks: dedupes in-flight checks, honours the
+ * server's `nextCheckAfter` cache hint and `removeFromHistory`, and fails
+ * silently — the SDK never crashes the host app.
  */
 internal class WhiskrKitEligibilityService(
     private val api: SurveyApi,

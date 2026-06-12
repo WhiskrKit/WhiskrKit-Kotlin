@@ -50,14 +50,13 @@ public object WhiskrKit {
     internal var eligibilityStorage: EligibilityStorage? = null
 
     /**
-     * The imperative trigger channel observed by the host (decision #4, amended):
-     * a StateFlow with consume-and-null semantics. A `present()` call made before
-     * any host is composed is buffered and delivered to the first host that
-     * appears — a deliberate improvement over iOS, where it would be dropped.
+     * The imperative trigger channel observed by the host: a StateFlow with
+     * consume-and-null semantics. A `present()` call made before any host is
+     * composed is buffered and delivered to the first host that appears.
      */
     internal val pendingSurvey: MutableStateFlow<PendingSurveyRequest?> = MutableStateFlow(null)
 
-    /** Auto-trigger dedup (decision #6): applies to [eu.whiskrkit.ui.WhiskrKitSurvey] only. */
+    /** Auto-trigger dedup: applies to [eu.whiskrkit.ui.WhiskrKitSurvey] only. */
     internal val autoCheckedIdentifiers: MutableSet<String> = mutableSetOf()
 
     private var lifecycleObserversRegistered = false
@@ -140,7 +139,7 @@ public object WhiskrKit {
         return service.checkEligibility(surveyId)
     }
 
-    /** Auto-trigger path used by `WhiskrKitSurvey`; deduped per process (decision #6). */
+    /** Auto-trigger path used by `WhiskrKitSurvey`; deduped per process. */
     internal suspend fun autoCheckAndPresent(identifier: String) {
         if (!autoCheckedIdentifiers.add(identifier)) return
         val template = checkEligibility(identifier) ?: return
@@ -179,8 +178,7 @@ public object WhiskrKit {
         if (lifecycleObserversRegistered) return
         lifecycleObserversRegistered = true
 
-        // Session = app came to foreground (decision #5); also the iOS
-        // willEnterForeground analog for retrying queued submissions.
+        // Session = app came to foreground; also retries queued submissions.
         ProcessLifecycleOwner.get().lifecycle.addObserver(
             LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_START) {
@@ -190,8 +188,8 @@ public object WhiskrKit {
             },
         )
 
-        // Retry when connectivity returns (decision #19). Application-scoped;
-        // never unregistered on purpose.
+        // Retry when connectivity returns. Application-scoped; never
+        // unregistered on purpose.
         runCatching {
             val connectivityManager =
                 appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager

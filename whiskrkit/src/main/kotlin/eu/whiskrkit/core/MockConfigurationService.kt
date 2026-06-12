@@ -16,9 +16,9 @@ import eu.whiskrkit.internal.WhiskrLog
 import kotlinx.coroutines.delay
 
 /**
- * Mock configuration service for testing and development, mirroring the iOS
- * `MockConfigurationService`: predefined templates behind well-known
- * identifiers, a simulated network delay, and log-only submissions.
+ * Mock configuration service for testing and development: predefined templates
+ * behind well-known identifiers, a simulated network delay, and log-only
+ * submissions.
  */
 internal class MockConfigurationService : ConfigurationService {
 
@@ -176,7 +176,7 @@ internal class MockConfigurationService : ConfigurationService {
     )
 }
 
-/** Mock eligibility: always eligible, returns the template directly (parity, P6). */
+/** Mock eligibility: always eligible, returns the template directly. */
 internal class MockEligibilityService(
     private val configurationService: ConfigurationService,
 ) : EligibilityService {

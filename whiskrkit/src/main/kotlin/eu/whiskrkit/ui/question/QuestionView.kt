@@ -11,7 +11,7 @@ import eu.whiskrkit.core.model.TextSurveyTemplate
 import eu.whiskrkit.core.model.ThumbsSurveyTemplate
 import eu.whiskrkit.core.model.UnknownQuestionTemplate
 
-/** The Compose counterpart of the iOS `TemplateViewBuilder`. */
+/** Dispatches a question template to its composable. */
 @Composable
 internal fun QuestionView(
     template: QuestionTemplate,

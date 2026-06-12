@@ -39,9 +39,9 @@ import eu.whiskrkit.ui.question.QuestionView
 import kotlinx.coroutines.launch
 
 /**
- * Sheet presentation via Material3 ModalBottomSheet (decision #1). Content
- * height wrapping is native; insets are handled in the content so the sheet
- * grows with the keyboard when the follow-up text field gets focus.
+ * Sheet presentation via Material3 ModalBottomSheet. Content height wrapping
+ * is native; insets are handled in the content so the sheet grows with the
+ * keyboard when the follow-up text field gets focus.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,8 +84,8 @@ internal fun SheetContent(
     }
     var submitAttempted by rememberSaveable { mutableStateOf(false) }
 
-    // iOS parity: the sheet's main question must be answered to submit,
-    // regardless of isRequired.
+    // The sheet's main question must be answered to submit, regardless of
+    // isRequired.
     val canSubmit = template.survey.id in response.results
 
     fun submit() {

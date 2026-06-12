@@ -20,9 +20,9 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 
 /**
- * The user's answers, keyed by question id. Wire format matches the iOS
- * `SurveyResponse`: each answer is a single-key object tagged with its type,
- * e.g. `{"results": {"q1": {"npsRating": 7}, "q2": {"textualSurvey": "..."}}}`.
+ * The user's answers, keyed by question id. On the wire, each answer is a
+ * single-key object tagged with its type, e.g.
+ * `{"results": {"q1": {"npsRating": 7}, "q2": {"textualSurvey": "..."}}}`.
  */
 @Serializable
 internal data class SurveyResponse(

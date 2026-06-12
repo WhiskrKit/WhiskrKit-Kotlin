@@ -12,11 +12,11 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 /**
- * A single question inside a survey. Mirrors the iOS `SurveyPresentation.SurveyBase`
- * union; the wire discriminator is the `template` field.
+ * A single question inside a survey; the wire discriminator is the
+ * `template` field.
  *
  * The inconsistent `A11yLabel` / `a11yHint` JSON key casing is intentional —
- * it matches the backend contract byte-for-byte (decision P3).
+ * it matches the backend contract byte-for-byte.
  */
 @Serializable(with = QuestionTemplateSerializer::class)
 internal sealed interface QuestionTemplate {
@@ -48,7 +48,7 @@ internal data class SymbolRatingTemplate(
     override val id: String,
     val title: String? = null,
     val description: String? = null,
-    /** Decoded but unimplemented, matching iOS (decision P5 / #8). */
+    /** Decoded but not yet acted upon; reserved for Play In-App Review support. */
     val opensStoreReview: Boolean = false,
     override val isRequired: Boolean,
     @SerialName("A11yLabel") val a11yLabel: String? = null,
@@ -106,8 +106,8 @@ internal data class MultipleChoiceOption(
 )
 
 /**
- * Lenient-decoding fallback (decision B1): question types this SDK version does
- * not understand decode to this placeholder instead of failing the template.
+ * Lenient-decoding fallback: question types this SDK version does not
+ * understand decode to this placeholder instead of failing the template.
  * Validation in [validated] decides whether the survey can still be shown.
  */
 @Serializable

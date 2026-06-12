@@ -23,9 +23,9 @@ import eu.whiskrkit.core.model.TextSurveyTemplate
 import androidx.compose.material3.Text
 
 /**
- * Free-text question. The character cap is enforced by truncation (iOS parity);
- * the live counter appears when focused or past 80% of the cap, turning to the
- * warning color past 90%.
+ * Free-text question. The character cap is enforced by truncation; the live
+ * counter appears when focused or past 80% of the cap, turning to the warning
+ * color past 90%.
  */
 @Composable
 internal fun TextFeedbackQuestion(

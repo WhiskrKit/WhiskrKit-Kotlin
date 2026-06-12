@@ -2,6 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Required: WhiskrKit talks to the WhiskrKit backend. -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Used to retry queued submissions when connectivity returns (decision #19). -->
+    <!-- Used to retry queued submissions when connectivity returns. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>

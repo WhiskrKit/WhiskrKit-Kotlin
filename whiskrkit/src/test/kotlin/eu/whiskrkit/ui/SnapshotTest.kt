@@ -40,11 +40,9 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
 /**
- * Roborazzi reference renders (decision #21, amended: Paparazzi 2.0 alphas
- * could not initialise layoutlib against this toolchain, so the same JVM
- * screenshot goal is met with Roborazzi on the Robolectric stack we already
- * use). Run `./gradlew recordRoborazziDebug` to update golden images,
- * `verifyRoborazziDebug` in CI.
+ * Roborazzi reference renders covering every question type and presentation
+ * container, light and dark. Run `./gradlew recordRoborazziDebug` to update
+ * golden images, `verifyRoborazziDebug` in CI.
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)

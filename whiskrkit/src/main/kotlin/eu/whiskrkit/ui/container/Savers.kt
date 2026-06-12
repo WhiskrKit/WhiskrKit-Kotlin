@@ -9,8 +9,8 @@ import eu.whiskrkit.core.model.SurveyTemplate
 import eu.whiskrkit.core.serialization.WireJson
 
 /**
- * Rotation/process-death survival (decision #9): the active template and the
- * answers round-trip through their JSON wire form into saved instance state.
+ * Rotation/process-death survival: the active template and the answers
+ * round-trip through their JSON wire form into saved instance state.
  * Encoding uses the concrete serializer per type (no reflective lookup, R8-safe);
  * decoding goes through the polymorphic `template` discriminator.
  */
