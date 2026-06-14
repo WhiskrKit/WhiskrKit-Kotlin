@@ -87,7 +87,6 @@ mavenPublishing {
         name.set("WhiskrKit for Android")
         description.set("In-app survey and feedback SDK for Android, built with Jetpack Compose.")
         inceptionYear.set("2026")
-        // TODO: replace with the real repo URL once the GitHub repo exists.
         url.set("https://github.com/whiskrkit/whiskrkit-kotlin")
         licenses {
             license {
