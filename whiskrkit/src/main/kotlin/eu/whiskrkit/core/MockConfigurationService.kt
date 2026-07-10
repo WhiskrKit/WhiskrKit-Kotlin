@@ -147,7 +147,7 @@ internal class MockConfigurationService : ConfigurationService {
                     id = "form-1-scale",
                     title = "How likely are you to recommend us?",
                     subtitle = "Your feedback helps us improve",
-                    ratingRange = ScaleRatingTemplate.RatingRange(min = 1, max = 7),
+                    ratingRange = ScaleRatingTemplate.RatingRange(min = 1, max = 10),
                     isRequired = true,
                 ),
                 TextSurveyTemplate(

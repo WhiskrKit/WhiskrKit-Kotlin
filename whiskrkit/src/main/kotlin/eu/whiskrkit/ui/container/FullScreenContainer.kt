@@ -51,8 +51,6 @@ internal fun FullScreenContainer(template: FullScreenFormTemplate, onDismiss: ()
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
-            // Draw edge-to-edge so the Scaffold background fills behind the
-            // system bars; otherwise the dialog scrim shows through there.
             decorFitsSystemWindows = false,
         ),
     ) {

@@ -1,7 +1,7 @@
 ![WhiskrKit logo](https://whiskrkit.eu/WhiskrKit_logo.png)
-# WhiskrKit for Android (Kotlin) — The purr-fect feedback toolkit for modern apps.
+# WhiskrKit for Android (Kotlin) - The purr-fect feedback toolkit for modern apps.
 
-![version](https://img.shields.io/badge/version-0.1.0-blue) ![MIT](https://img.shields.io/badge/license-MIT-green)
+![version](https://img.shields.io/badge/version-0.1.1-blue) ![MIT](https://img.shields.io/badge/license-MIT-green)
 
 WhiskrKit provides a flexible and easy-to-use API for presenting questionnaires and
 feedback forms in your Jetpack Compose applications. This is the native Android
