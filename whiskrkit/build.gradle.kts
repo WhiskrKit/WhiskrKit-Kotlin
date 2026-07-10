@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.maven.publish)
 }
 
-val sdkVersion = "0.1.0"
+val sdkVersion = "0.1.1"
 
 android {
     namespace = "eu.whiskrkit"
@@ -43,8 +43,13 @@ android {
 
 kotlin {
     explicitApi()
+    // Consumers run older Kotlin (React Native 0.85 templates ship 2.1.20); keep the
+    // published metadata and the exported kotlin-stdlib readable by a 2.1 compiler.
+    coreLibrariesVersion = "2.1.20"
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1)
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1)
     }
 }
 

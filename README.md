@@ -26,7 +26,7 @@ backend and share the same survey templates.
 
 ```kotlin
 dependencies {
-    implementation("eu.whiskrkit:whiskrkit-android:0.1.0")
+    implementation("eu.whiskrkit:whiskrkit-android:0.1.1")
 }
 ```
 
