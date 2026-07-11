@@ -22,7 +22,14 @@ internal class DeviceInfo(
             context.packageManager.getPackageInfo(context.packageName, 0)
         }.getOrNull()
         appVersion = packageInfo?.versionName ?: "unknown"
-        appBuild = packageInfo?.longVersionCode?.toString() ?: "unknown"
+        appBuild = packageInfo?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                it.longVersionCode.toString()
+            } else {
+                @Suppress("DEPRECATION")
+                it.versionCode.toString()
+            }
+        } ?: "unknown"
     }
 
     val deviceId: String get() = deviceIdProvider().ifEmpty { "unknown" }

@@ -3,7 +3,9 @@ agp = "8.13.2"
 kotlin = "2.3.10"
 composeBom = "2026.04.01"
 coroutines = "1.10.2"
-serialization = "1.10.0"
+# 1.8.x is the newest line built against Kotlin 2.1; newer lines drag
+# kotlin-stdlib 2.3 onto consumers' runtime classpath.
+serialization = "1.8.1"
 okhttp = "4.12.0"
 lifecycleProcess = "2.9.4"
 activityCompose = "1.12.4"

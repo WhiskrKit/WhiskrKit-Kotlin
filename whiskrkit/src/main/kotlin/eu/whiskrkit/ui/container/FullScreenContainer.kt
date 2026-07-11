@@ -49,7 +49,10 @@ import kotlinx.coroutines.launch
 internal fun FullScreenContainer(template: FullScreenFormTemplate, onDismiss: () -> Unit) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false,
+        ),
     ) {
         FullScreenContent(
             template = template,
