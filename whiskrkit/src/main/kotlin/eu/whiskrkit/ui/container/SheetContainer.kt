@@ -49,21 +49,32 @@ internal fun SheetContainer(template: SheetTemplate, onDismiss: () -> Unit) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val animationScope = androidx.compose.runtime.rememberCoroutineScope()
     val theme = LocalWhiskrKitTheme.current
+    val impressions = rememberImpressionReporter(template.id)
 
     fun animateDismiss() {
         animationScope.launch { sheetState.hide() }.invokeOnCompletion { onDismiss() }
     }
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        // Swipe-down, scrim tap, and back all arrive here.
+        onDismissRequest = {
+            impressions.surveyClosed()
+            onDismiss()
+        },
         sheetState = sheetState,
         containerColor = theme.sheetBackground,
         contentWindowInsets = { WindowInsets(0, 0, 0, 0) },
     ) {
         SheetContent(
             template = template,
-            onClose = ::animateDismiss,
-            onSubmitted = ::animateDismiss,
+            onClose = {
+                impressions.surveyClosed()
+                animateDismiss()
+            },
+            onSubmitted = {
+                impressions.markInteracted()
+                animateDismiss()
+            },
             modifier = Modifier
                 .navigationBarsPadding()
                 .imePadding(),

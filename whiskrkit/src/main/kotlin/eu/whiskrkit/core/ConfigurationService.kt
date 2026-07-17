@@ -1,5 +1,7 @@
 package eu.whiskrkit.core
 
+import eu.whiskrkit.core.model.SurveyImpressionEvent
+import eu.whiskrkit.core.model.SurveyImpressionTrigger
 import eu.whiskrkit.core.model.SurveyResponse
 import eu.whiskrkit.core.model.SurveyTemplate
 import eu.whiskrkit.core.network.NetworkService
@@ -14,6 +16,7 @@ import kotlinx.coroutines.launch
 internal interface ConfigurationService {
     suspend fun fetchSurveyTemplate(identifier: String): SurveyTemplate?
     suspend fun submitSurveyResponse(surveyId: String, response: SurveyResponse): Boolean
+    suspend fun recordImpression(surveyId: String, event: SurveyImpressionEvent, trigger: SurveyImpressionTrigger)
     suspend fun retryPendingSubmissions()
     fun configure(apiKey: String)
 }
@@ -40,6 +43,16 @@ internal class WhiskrKitConfigurationService(
     } catch (e: WhiskrKitException) {
         WhiskrLog.w(WhiskrLog.NETWORKING, "Fetching survey failed", e)
         null
+    }
+
+    /** Fire-and-forget analytics: failures are logged and dropped, never queued. */
+    override suspend fun recordImpression(surveyId: String, event: SurveyImpressionEvent, trigger: SurveyImpressionTrigger) {
+        try {
+            networkService.recordImpression(surveyId, event, trigger)
+            WhiskrLog.i(WhiskrLog.NETWORKING, "Reported '${event.name.lowercase()}' (${trigger.name.lowercase()}) impression for survey '$surveyId'")
+        } catch (e: WhiskrKitException) {
+            WhiskrLog.w(WhiskrLog.NETWORKING, "Impression report failed for '$surveyId'. Ignoring.", e)
+        }
     }
 
     override suspend fun submitSurveyResponse(surveyId: String, response: SurveyResponse): Boolean {

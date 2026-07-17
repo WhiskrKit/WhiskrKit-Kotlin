@@ -7,6 +7,10 @@ import kotlinx.serialization.Serializable
 /**
  * Context sent with every eligibility check. Dates are ISO-8601, as the
  * backend expects.
+ *
+ * The maps deliberately have no defaults: `WireJson` skips default-valued
+ * fields, and empty maps must still be encoded as `{}` for wire parity with
+ * the iOS SDK.
  */
 @Serializable
 internal data class SurveyEligibilityContext(
@@ -16,7 +20,9 @@ internal data class SurveyEligibilityContext(
     val sessionCount: Int,
     val installDate: IsoInstant,
     val lastSurveyDate: IsoInstant? = null,
-    val completedSurveys: Map<String, IsoInstant> = emptyMap(),
+    val completedSurveys: Map<String, IsoInstant>,
+    /** Surveys put on screen, whatever the outcome. */
+    val seenSurveys: Map<String, IsoInstant>,
 )
 
 @Serializable

@@ -62,6 +62,7 @@ internal fun BoxScope.BannerHost(
     onOpenFollowUp: (String) -> Unit,
 ) {
     val visibleState = remember { MutableTransitionState(false).apply { targetState = true } }
+    val impressions = rememberImpressionReporter(template.id)
 
     // When the exit animation has fully finished, release the template.
     LaunchedEffect(visibleState.isIdle, visibleState.currentState) {
@@ -78,8 +79,19 @@ internal fun BoxScope.BannerHost(
     ) {
         BannerContent(
             template = template,
-            onDismissRequested = { visibleState.targetState = false },
-            onOpenFollowUp = onOpenFollowUp,
+            onDismissRequested = {
+                impressions.surveyClosed()
+                visibleState.targetState = false
+            },
+            onSubmitted = {
+                impressions.markInteracted()
+                visibleState.targetState = false
+            },
+            // Opening the follow-up is an interaction, not a dismissal.
+            onOpenFollowUp = { followUpId ->
+                impressions.markInteracted()
+                onOpenFollowUp(followUpId)
+            },
         )
     }
 }
@@ -88,6 +100,7 @@ internal fun BoxScope.BannerHost(
 internal fun BannerContent(
     template: BannerTemplate,
     onDismissRequested: () -> Unit,
+    onSubmitted: () -> Unit,
     onOpenFollowUp: (String) -> Unit,
 ) {
     val theme = LocalWhiskrKitTheme.current
@@ -109,7 +122,7 @@ internal fun BannerContent(
             WhiskrKit.scope.launch {
                 WhiskrKit.submitSurveyResponse(template.id, submitted)
             }
-            onDismissRequested()
+            onSubmitted()
         } else {
             submitAttempted = true
         }

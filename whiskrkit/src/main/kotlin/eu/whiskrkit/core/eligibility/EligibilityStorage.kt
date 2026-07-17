@@ -22,9 +22,13 @@ internal interface EligibilityStorage {
     var lastSurveyDate: Instant?
     var completedSurveys: Map<String, Instant>
 
+    /** Surveys that have been put on screen, whatever the outcome. */
+    var seenSurveys: Map<String, Instant>
+
     fun nextCheckAfter(surveyId: String): Instant?
     fun setNextCheckAfter(date: Instant?, surveyId: String)
     fun removeCompletedSurvey(surveyId: String)
+    fun removeSeenSurvey(surveyId: String)
     fun incrementSessionCount()
 
     /** Sets deviceId and installDate on first call; subsequent calls are no-ops. */
@@ -45,6 +49,7 @@ internal class SharedPrefsEligibilityStorage(
         const val INSTALL_DATE = "installDate"
         const val LAST_SURVEY_DATE = "lastSurveyDate"
         const val COMPLETED_SURVEYS = "completedSurveys"
+        const val SEEN_SURVEYS = "seenSurveys"
 
         fun nextCheckAfter(surveyId: String) = "nextCheckAfter.$surveyId"
     }
@@ -73,16 +78,24 @@ internal class SharedPrefsEligibilityStorage(
         }
 
     override var completedSurveys: Map<String, Instant>
-        get() {
-            val raw = prefs.getString(Keys.COMPLETED_SURVEYS, null) ?: return emptyMap()
-            return runCatching {
-                WireJson.decodeFromString(completedSurveysSerializer, raw)
-            }.getOrDefault(emptyMap())
-        }
-        set(value) {
-            val raw = WireJson.encodeToString(completedSurveysSerializer, value)
-            prefs.edit().putString(Keys.COMPLETED_SURVEYS, raw).apply()
-        }
+        get() = dateMap(Keys.COMPLETED_SURVEYS)
+        set(value) = setDateMap(Keys.COMPLETED_SURVEYS, value)
+
+    override var seenSurveys: Map<String, Instant>
+        get() = dateMap(Keys.SEEN_SURVEYS)
+        set(value) = setDateMap(Keys.SEEN_SURVEYS, value)
+
+    private fun dateMap(key: String): Map<String, Instant> {
+        val raw = prefs.getString(key, null) ?: return emptyMap()
+        return runCatching {
+            WireJson.decodeFromString(dateMapSerializer, raw)
+        }.getOrDefault(emptyMap())
+    }
+
+    private fun setDateMap(key: String, value: Map<String, Instant>) {
+        val raw = WireJson.encodeToString(dateMapSerializer, value)
+        prefs.edit().putString(key, raw).apply()
+    }
 
     override fun nextCheckAfter(surveyId: String): Instant? =
         prefs.getLong(Keys.nextCheckAfter(surveyId), -1L)
@@ -98,6 +111,10 @@ internal class SharedPrefsEligibilityStorage(
 
     override fun removeCompletedSurvey(surveyId: String) {
         completedSurveys = completedSurveys - surveyId
+    }
+
+    override fun removeSeenSurvey(surveyId: String) {
+        seenSurveys = seenSurveys - surveyId
     }
 
     override fun incrementSessionCount() {
@@ -121,7 +138,7 @@ internal class SharedPrefsEligibilityStorage(
     private companion object {
         const val PREFS_FILE = "eu.whiskrkit"
 
-        val completedSurveysSerializer =
+        val dateMapSerializer =
             MapSerializer(String.serializer(), IsoInstantSerializer)
     }
 }

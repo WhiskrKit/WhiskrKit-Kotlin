@@ -47,8 +47,14 @@ import kotlinx.coroutines.launch
  */
 @Composable
 internal fun FullScreenContainer(template: FullScreenFormTemplate, onDismiss: () -> Unit) {
+    val impressions = rememberImpressionReporter(template.id)
+
     Dialog(
-        onDismissRequest = onDismiss,
+        // Back-press arrives here.
+        onDismissRequest = {
+            impressions.surveyClosed()
+            onDismiss()
+        },
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
             decorFitsSystemWindows = false,
@@ -56,8 +62,14 @@ internal fun FullScreenContainer(template: FullScreenFormTemplate, onDismiss: ()
     ) {
         FullScreenContent(
             template = template,
-            onClose = onDismiss,
-            onSubmitted = onDismiss,
+            onClose = {
+                impressions.surveyClosed()
+                onDismiss()
+            },
+            onSubmitted = {
+                impressions.markInteracted()
+                onDismiss()
+            },
         )
     }
 }
