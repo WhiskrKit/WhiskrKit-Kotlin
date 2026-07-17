@@ -3,6 +3,9 @@ package eu.whiskrkit.core.network
 import eu.whiskrkit.BuildConfig
 import eu.whiskrkit.core.eligibility.SurveyEligibilityContext
 import eu.whiskrkit.core.eligibility.SurveyEligibilityResponse
+import eu.whiskrkit.core.model.SurveyImpressionEvent
+import eu.whiskrkit.core.model.SurveyImpressionRequest
+import eu.whiskrkit.core.model.SurveyImpressionTrigger
 import eu.whiskrkit.core.model.SurveyResponse
 import eu.whiskrkit.core.model.SurveyTemplate
 import eu.whiskrkit.core.serialization.WireJson
@@ -23,7 +26,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import eu.whiskrkit.internal.DeviceInfo
 
-/** The three backend endpoints, abstracted for testability. */
+/** The four backend endpoints, abstracted for testability. */
 internal interface SurveyApi {
     suspend fun fetchSurvey(identifier: String): SurveyTemplate
 
@@ -36,6 +39,12 @@ internal interface SurveyApi {
         surveyId: String,
         response: SurveyResponse,
         idempotencyKey: String? = null,
+    )
+
+    suspend fun recordImpression(
+        surveyId: String,
+        event: SurveyImpressionEvent,
+        trigger: SurveyImpressionTrigger,
     )
 }
 
@@ -79,6 +88,18 @@ internal class NetworkService(
             builder.header("X-Idempotency-Key", idempotencyKey)
         }
         val request = builder.build()
+        withRetry { execute(request) }
+    }
+
+    /** Reports that a survey went on screen, or left it without a submission. */
+    override suspend fun recordImpression(
+        surveyId: String,
+        event: SurveyImpressionEvent,
+        trigger: SurveyImpressionTrigger,
+    ) {
+        val body = WireJson.encodeToString(SurveyImpressionRequest.serializer(), SurveyImpressionRequest(event, trigger))
+            .toRequestBody(JSON_MEDIA_TYPE)
+        val request = requestBuilder("api/v1/survey/$surveyId/impression").post(body).build()
         withRetry { execute(request) }
     }
 

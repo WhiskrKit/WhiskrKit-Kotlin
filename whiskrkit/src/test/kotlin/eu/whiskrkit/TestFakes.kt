@@ -3,6 +3,8 @@ package eu.whiskrkit
 import eu.whiskrkit.core.eligibility.EligibilityStorage
 import eu.whiskrkit.core.eligibility.SurveyEligibilityContext
 import eu.whiskrkit.core.eligibility.SurveyEligibilityResponse
+import eu.whiskrkit.core.model.SurveyImpressionEvent
+import eu.whiskrkit.core.model.SurveyImpressionTrigger
 import eu.whiskrkit.core.model.SurveyResponse
 import eu.whiskrkit.core.model.SurveyTemplate
 import eu.whiskrkit.core.network.SurveyApi
@@ -15,10 +17,12 @@ internal class FakeSurveyApi : SurveyApi {
     var fetchResult: SurveyTemplate? = null
     var eligibilityResult: SurveyEligibilityResponse? = null
     var submitError: WhiskrKitException? = null
+    var impressionError: WhiskrKitException? = null
 
     var eligibilityCalls = 0
     val eligibilityContexts = mutableListOf<SurveyEligibilityContext>()
     val submissions = mutableListOf<Triple<String, SurveyResponse, String?>>()
+    val impressions = mutableListOf<Triple<String, SurveyImpressionEvent, SurveyImpressionTrigger>>()
 
     override suspend fun fetchSurvey(identifier: String): SurveyTemplate =
         fetchResult ?: throw WhiskrKitException.NotFound()
@@ -39,6 +43,15 @@ internal class FakeSurveyApi : SurveyApi {
     ) {
         submitError?.let { throw it }
         submissions += Triple(surveyId, response, idempotencyKey)
+    }
+
+    override suspend fun recordImpression(
+        surveyId: String,
+        event: SurveyImpressionEvent,
+        trigger: SurveyImpressionTrigger,
+    ) {
+        impressionError?.let { throw it }
+        impressions += Triple(surveyId, event, trigger)
     }
 }
 
@@ -64,6 +77,7 @@ internal class FakeEligibilityStorage : EligibilityStorage {
     override var installDate: Instant = Instant.parse("2026-01-01T00:00:00Z")
     override var lastSurveyDate: Instant? = null
     override var completedSurveys: Map<String, Instant> = emptyMap()
+    override var seenSurveys: Map<String, Instant> = emptyMap()
 
     private val nextChecks = mutableMapOf<String, Instant>()
 
@@ -75,6 +89,10 @@ internal class FakeEligibilityStorage : EligibilityStorage {
 
     override fun removeCompletedSurvey(surveyId: String) {
         completedSurveys = completedSurveys - surveyId
+    }
+
+    override fun removeSeenSurvey(surveyId: String) {
+        seenSurveys = seenSurveys - surveyId
     }
 
     override fun incrementSessionCount() {

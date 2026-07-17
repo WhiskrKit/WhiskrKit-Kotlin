@@ -247,6 +247,7 @@ class SnapshotTest {
                 survey = ThumbsSurveyTemplate(id = "q1", isRequired = false),
             ),
             onDismissRequested = {},
+            onSubmitted = {},
             onOpenFollowUp = {},
         )
     }
@@ -261,6 +262,7 @@ class SnapshotTest {
                 followUpIdentifier = "next",
             ),
             onDismissRequested = {},
+            onSubmitted = {},
             onOpenFollowUp = {},
         )
     }
@@ -275,6 +277,7 @@ class SnapshotTest {
                 followUpIdentifier = "next",
             ),
             onDismissRequested = {},
+            onSubmitted = {},
             onOpenFollowUp = {},
         )
     }

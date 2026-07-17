@@ -7,6 +7,8 @@ import eu.whiskrkit.core.model.MultipleChoiceOption
 import eu.whiskrkit.core.model.MultipleChoiceTemplate
 import eu.whiskrkit.core.model.ScaleRatingTemplate
 import eu.whiskrkit.core.model.SheetTemplate
+import eu.whiskrkit.core.model.SurveyImpressionEvent
+import eu.whiskrkit.core.model.SurveyImpressionTrigger
 import eu.whiskrkit.core.model.SurveyResponse
 import eu.whiskrkit.core.model.SurveyTemplate
 import eu.whiskrkit.core.model.SymbolRatingTemplate
@@ -43,6 +45,13 @@ internal class MockConfigurationService : ConfigurationService {
             "Mock: saved surveyId=$surveyId response=${response.results}",
         )
         return true
+    }
+
+    override suspend fun recordImpression(surveyId: String, event: SurveyImpressionEvent, trigger: SurveyImpressionTrigger) {
+        WhiskrLog.i(
+            WhiskrLog.NETWORKING,
+            "Mock: '${event.name.lowercase()}' (${trigger.name.lowercase()}) impression for surveyId=$surveyId",
+        )
     }
 
     private fun buildTemplates(): Map<String, SurveyTemplate> = mapOf(

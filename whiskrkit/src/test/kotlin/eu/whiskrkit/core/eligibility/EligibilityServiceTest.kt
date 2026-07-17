@@ -77,6 +77,35 @@ class EligibilityServiceTest {
     }
 
     @Test
+    fun `removeFromHistory clears the seen record too`() = runTest {
+        storage.seenSurveys = mapOf("survey-1" to now.minusSeconds(86_400))
+        api.eligibilityResult = SurveyEligibilityResponse(
+            shouldShow = false,
+            removeFromHistory = true,
+        )
+
+        service.checkEligibility("survey-1")
+
+        assertTrue(storage.seenSurveys.isEmpty())
+    }
+
+    /**
+     * The regression this whole mechanism exists for: a dismissal writes only a
+     * `seen` record, so unless that reaches the server the repeat policy is
+     * never consulted and a dismissed survey is granted again forever.
+     */
+    @Test
+    fun `seenSurveys reaches the server in the eligibility context`() = runTest {
+        val seenDate = now.minusSeconds(3600)
+        storage.seenSurveys = mapOf("your-journey-stats" to seenDate)
+        api.eligibilityResult = SurveyEligibilityResponse(shouldShow = false)
+
+        service.checkEligibility("your-journey-stats")
+
+        assertEquals(seenDate, api.eligibilityContexts.single().seenSurveys["your-journey-stats"])
+    }
+
+    @Test
     fun `network failure returns null without crashing`() = runTest {
         api.eligibilityResult = null // FakeSurveyApi throws ServerError
 

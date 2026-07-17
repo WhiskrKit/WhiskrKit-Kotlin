@@ -44,8 +44,11 @@ internal class WhiskrKitEligibilityService(
 
             storage.setNextCheckAfter(response.nextCheckAfter, surveyId)
 
+            // removeFromHistory means forget the survey entirely:
+            // completion, seen, and cache.
             if (response.removeFromHistory == true) {
                 storage.removeCompletedSurvey(surveyId)
+                storage.removeSeenSurvey(surveyId)
                 storage.setNextCheckAfter(null, surveyId)
             }
 
@@ -75,5 +78,6 @@ internal class WhiskrKitEligibilityService(
         installDate = storage.installDate,
         lastSurveyDate = storage.lastSurveyDate,
         completedSurveys = storage.completedSurveys,
+        seenSurveys = storage.seenSurveys,
     )
 }

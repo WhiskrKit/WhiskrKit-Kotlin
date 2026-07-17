@@ -15,6 +15,8 @@ import eu.whiskrkit.core.eligibility.EligibilityService
 import eu.whiskrkit.core.eligibility.EligibilityStorage
 import eu.whiskrkit.core.eligibility.SharedPrefsEligibilityStorage
 import eu.whiskrkit.core.eligibility.WhiskrKitEligibilityService
+import eu.whiskrkit.core.model.SurveyImpressionEvent
+import eu.whiskrkit.core.model.SurveyImpressionTrigger
 import eu.whiskrkit.core.model.SurveyResponse
 import eu.whiskrkit.core.model.SurveyTemplate
 import eu.whiskrkit.core.network.NetworkService
@@ -131,13 +133,31 @@ public object WhiskrKit {
 
     // region Internal API used by the UI layer
 
+    /**
+     * Survey ids granted by an eligibility check but not yet rendered;
+     * consumed to decide the impression trigger.
+     */
+    private val pendingTargetedGrants = mutableSetOf<String>()
+
     internal suspend fun checkEligibility(surveyId: String): SurveyTemplate? {
         val service = eligibilityService ?: run {
             WhiskrLog.e(WhiskrLog.CORE, "WhiskrKit is not initialized. Call initialize() first.")
             return null
         }
-        return service.checkEligibility(surveyId)
+        val template = service.checkEligibility(surveyId)
+        if (template != null) {
+            pendingTargetedGrants += template.id
+        }
+        return template
     }
+
+    /** Resolves how the survey now on screen got there, consuming the grant marker. */
+    internal fun consumeImpressionTrigger(surveyId: String): SurveyImpressionTrigger =
+        if (pendingTargetedGrants.remove(surveyId)) {
+            SurveyImpressionTrigger.TARGETED
+        } else {
+            SurveyImpressionTrigger.MANUAL
+        }
 
     /** Auto-trigger path used by `WhiskrKitSurvey`; deduped per process. */
     internal suspend fun autoCheckAndPresent(identifier: String) {
@@ -172,6 +192,23 @@ public object WhiskrKit {
         storage.completedSurveys = storage.completedSurveys + (surveyId to Instant.now())
         storage.setNextCheckAfter(null, surveyId)
         WhiskrLog.i(WhiskrLog.CORE, "Tracked completion for survey '$surveyId'")
+    }
+
+    /**
+     * Records that a survey went on screen; reported as `seenSurveys` in the
+     * eligibility context. Written for every presentation, [present] included.
+     * No-op in mock mode ([eligibilityStorage] is null there).
+     */
+    internal fun trackSurveySeen(surveyId: String) {
+        val storage = eligibilityStorage ?: return
+        storage.seenSurveys = storage.seenSurveys + (surveyId to Instant.now())
+        WhiskrLog.i(WhiskrLog.CORE, "Tracked impression for survey '$surveyId'")
+    }
+
+    /** Fire-and-forget: never blocks presentation or submission. */
+    internal fun recordImpression(surveyId: String, event: SurveyImpressionEvent, trigger: SurveyImpressionTrigger) {
+        val service = configurationService ?: return
+        scope.launch { service.recordImpression(surveyId, event, trigger) }
     }
 
     private fun registerLifecycleObservers(appContext: Context) {

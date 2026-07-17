@@ -59,6 +59,20 @@ class SharedPrefsStorageTest {
     }
 
     @Test
+    fun `seen surveys round-trip and clear independently of completions`() {
+        val storage = SharedPrefsEligibilityStorage(context)
+        val date = Instant.parse("2026-06-11T12:30:45Z")
+        storage.seenSurveys = mapOf("survey-1" to date)
+        storage.completedSurveys = mapOf("survey-2" to date)
+
+        assertEquals(mapOf("survey-1" to date), storage.seenSurveys)
+
+        storage.removeSeenSurvey("survey-1")
+        assertTrue(storage.seenSurveys.isEmpty())
+        assertEquals(mapOf("survey-2" to date), storage.completedSurveys)
+    }
+
+    @Test
     fun `nextCheckAfter set get and clear`() {
         val storage = SharedPrefsEligibilityStorage(context)
         val date = Instant.parse("2026-07-01T00:00:00Z")
