@@ -1,7 +1,12 @@
 [versions]
 agp = "8.13.2"
 kotlin = "2.3.10"
-composeBom = "2026.04.01"
+# Compose versions are pinned explicitly (no BOM): platform() constraints don't
+# reach the published api variant / POM entries, leaving consumers that resolve
+# the compile classpath with versionless deps ("Could not find
+# androidx.compose.runtime:runtime:"). These match compose-bom 2026.04.01.
+compose = "1.11.0"
+composeMaterial3 = "1.4.0"
 coroutines = "1.10.2"
 # 1.8.x is the newest line built against Kotlin 2.1; newer lines drag
 # kotlin-stdlib 2.3 onto consumers' runtime classpath.
@@ -19,13 +24,12 @@ androidxTestCore = "1.7.0"
 espresso = "3.7.0"
 
 [libraries]
-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
-compose-ui = { group = "androidx.compose.ui", name = "ui" }
-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose" }
+compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
+compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "composeMaterial3" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
@@ -38,7 +42,7 @@ robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "
 konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
 roborazzi = { group = "io.github.takahirom.roborazzi", name = "roborazzi", version.ref = "roborazzi" }
 roborazzi-compose = { group = "io.github.takahirom.roborazzi", name = "roborazzi-compose", version.ref = "roborazzi" }
-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 

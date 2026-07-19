@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.maven.publish)
 }
 
-val sdkVersion = "0.1.2"
+val sdkVersion = "0.1.3"
 
 android {
     namespace = "eu.whiskrkit"
@@ -59,7 +59,6 @@ roborazzi {
 }
 
 dependencies {
-    implementation(platform(libs.compose.bom))
     api(libs.compose.runtime)
     api(libs.compose.ui)
     implementation(libs.compose.foundation)
