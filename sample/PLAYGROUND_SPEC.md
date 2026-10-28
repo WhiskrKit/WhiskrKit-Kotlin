@@ -1,8 +1,10 @@
 # WhiskrKit Playground: cross-platform spec
 
 > This is a copy of the spec in the iOS SDK repository
-> (`Examples/PLAYGROUND_SPEC.md`). Sections 1–14 are unchanged. How the Android
-> playground differs is described in section 15, "Platform notes (Android)".
+> (`Examples/PLAYGROUND_SPEC.md`). Sections 1–14 are unchanged except for one
+> cross-platform rule added here first: the raised selection background in sections
+> 6, 9 and 12, not yet adopted on iOS. How the Android playground differs is
+> described in section 15, "Platform notes (Android)".
 
 This file describes the WhiskrKit Playground sample app so it can be rebuilt for the
 Android, React Native and Flutter SDKs. The iOS version in
@@ -170,7 +172,9 @@ matches `accent`.
 
 Theme values the playground does not expose stay as in `systemStyle`: all fonts,
 corner radii (primary 10, secondary 8, toast 8), toast shadow off, secondary button
-background transparent, and selection background `Color(.tertiarySystemBackground)`.
+background transparent, and selection background `Color(.tertiarySystemBackground)`
+(unless `background` is customized; see "Selection background follows a custom
+background" below).
 
 iOS rendering detail: the SDK draws subtitle and subheadline with an extra
 "secondary" opacity on top of the chosen color, so `secondaryText` always looks a bit
@@ -185,6 +189,32 @@ lighter than the picked value.
   color (custom or system default) put into the properties listed above. When
   `background` is not customized, leave the sheet and full-screen backgrounds unset,
   as `systemStyle` does, so the platform's own sheet background stays.
+
+### Selection background follows a custom background
+
+*Added during the Android port. Not yet adopted on iOS; see "Pending on iOS" below.*
+
+Unselected options sit on the selection background, with their labels in the `text`
+color. Left on its adaptive default, that background is light in light mode, so a
+fixed light `text` (Midnight's `#F2F2F7`) becomes unreadable there.
+
+Rule: when `background` is customized, set the selection background to that color
+mixed 10% toward white if it is dark, or 10% toward black if it is light. "Dark"
+means `0.2126 R + 0.7152 G + 0.0722 B < 128` on 8-bit sRGB channels. Round each
+channel to the nearest integer, halves up. Midnight's `#1B1B2F` gives `#323244`.
+When `background` is not customized, keep the default.
+
+The selection background is still not a role: it has no row, no persisted value and
+no variable in the snippet.
+
+#### Pending on iOS
+
+On iOS this affects the multiple-choice options (`ChoiceView` draws
+`selectionColor.backgroundColor` behind `.body()` text); thumbs and scale rating use
+fixed system colors there. To adopt the rule in `ThemeSettings.swift`, set
+`selectionColor.backgroundColor` to the raised color when `background` is
+customized, and keep `Color(.tertiarySystemBackground)` otherwise. Make the snippet
+match, and note it in that repo's spec.
 
 ## 7. Presets
 
@@ -268,7 +298,9 @@ WhiskrKit.shared.setTheme(theme)
 
 When `background` is customized, `container` also gets
 `sheet: .init(backgroundColor: background),` and
-`fullScreen: .init(backgroundColor: background),` before `toast`.
+`fullScreen: .init(backgroundColor: background),` before `toast`, and the selection
+background becomes the raised color from section 6 as an RGB literal with a
+`// raised background` comment (Android already does this; iOS doesn't yet).
 
 ## 10. Persistence
 
@@ -327,7 +359,8 @@ Check each item in the other SDK before building its playground.
 | One screen, sections in a list | Keeps the sample small; it's a demo, not a showcase app |
 | Surveys, roles and presets are data | So every platform can mirror the structure |
 | Six color roles, not every theme property | The colors a developer actually brands; fonts and radii are out of scope |
-| Selection background not exposed | Its system default reads well against both background states; one fewer control |
+| Selection background not exposed | One fewer control; derived from a custom background instead (next row) |
+| Selection background follows a custom background, raised 10% | Its adaptive default is light in light mode, which made fixed light text (Midnight) unreadable on options, thumbs and scale chips |
 | System or one fixed color per role | Snippet stays copy-pasteable and short; see section 8 |
 | No custom colors → built-in preset as-is | "System" matches the SDK default exactly, including unset sheet backgrounds |
 | Brand presets only set accent roles | They keep working in dark mode; Midnight shows the fully fixed alternative |
@@ -442,6 +475,10 @@ resolves from the ambient `MaterialTheme.colorScheme`:
   custom colors, the theme sets every mapped property and leaves the rest unset.
   Because `Color.Unspecified` means "default", the sheet and full-screen
   backgrounds need no special case.
+- Selection background: Android follows the section 6 rule. It matters more here
+  than on iOS, because thumbs buttons and scale chips also draw on the selection
+  background (`ThumbsRatingQuestion.kt`, `ScaleRatingQuestion.kt`), not only
+  multiple-choice options.
 - Preset swatches and the picker's starting color draw System roles from the
   current `MaterialTheme.colorScheme`; the background swatch uses
   `surfaceContainerLow`.
@@ -467,8 +504,10 @@ every device.
 - It compiles inside any `@Composable` with the imports
   `androidx.compose.ui.graphics.Color`, `eu.whiskrkit.theme.WhiskrKitTheme` and
   `eu.whiskrkit.ui.WhiskrKitHost`. The Code section's footer says so.
-- `sample/src/test/.../ThemeSettingsTest.kt` checks the System and Ocean output
-  and contains the Ocean output as code, so CI fails if the snippet stops
+- With a custom `background`, the selection line becomes
+  `WhiskrKitTheme.SelectionTheme(tintColor = selection, backgroundColor = Color(0xFF323244)), // raised background`.
+- `sample/src/test/.../ThemeSettingsTest.kt` checks the System, Ocean and Midnight
+  output and contains the Midnight output as code, so CI fails if the snippet stops
   compiling against the SDK.
 
 ### Persistence and picker (sections 3 and 10)

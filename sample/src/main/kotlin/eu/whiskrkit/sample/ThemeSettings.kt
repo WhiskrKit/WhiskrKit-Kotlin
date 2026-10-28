@@ -61,6 +61,12 @@ internal fun buildTheme(customColors: Map<String, String>): WhiskrKitTheme? {
     val text = color(ColorRole.Text)
     val secondaryText = color(ColorRole.SecondaryText)
     val selection = color(ColorRole.Selection)
+    // Unselected options, thumbs and scale chips sit on the selection
+    // background, with labels in the text color. Its default adapts to the
+    // mode, so with a fixed background (and usually fixed text) it follows the
+    // background instead, slightly raised.
+    val selectionBackground = customColors[ColorRole.Background.id]
+        ?.let { hexToColor(raisedHex(it)) } ?: Color.Unspecified
 
     return WhiskrKitTheme(
         container = WhiskrKitTheme.ContainerTheme(
@@ -68,7 +74,7 @@ internal fun buildTheme(customColors: Map<String, String>): WhiskrKitTheme? {
             fullScreen = WhiskrKitTheme.OverlayTheme(backgroundColor = background),
             banner = WhiskrKitTheme.BannerTheme(backgroundColor = background),
         ),
-        selection = WhiskrKitTheme.SelectionTheme(tintColor = selection),
+        selection = WhiskrKitTheme.SelectionTheme(tintColor = selection, backgroundColor = selectionBackground),
         button = WhiskrKitTheme.ButtonTheme(
             primary = WhiskrKitTheme.ButtonAppearance.Variant(
                 WhiskrKitTheme.ButtonVariant(backgroundColor = accent, textColor = onAccent),
@@ -109,6 +115,10 @@ internal fun themeSnippet(customColors: Map<String, String>): String {
         }
     }
 
+    val selectionTheme = customColors[ColorRole.Background.id]?.let { background ->
+        "WhiskrKitTheme.SelectionTheme(tintColor = selection, backgroundColor = Color(0xFF${raisedHex(background).substring(1)})), // raised background"
+    } ?: "WhiskrKitTheme.SelectionTheme(tintColor = selection),"
+
     return declarations + "\n\n" + """
         val theme = WhiskrKitTheme(
             container = WhiskrKitTheme.ContainerTheme(
@@ -116,7 +126,7 @@ internal fun themeSnippet(customColors: Map<String, String>): String {
                 fullScreen = WhiskrKitTheme.OverlayTheme(backgroundColor = background),
                 banner = WhiskrKitTheme.BannerTheme(backgroundColor = background),
             ),
-            selection = WhiskrKitTheme.SelectionTheme(tintColor = selection),
+            selection = $selectionTheme
             button = WhiskrKitTheme.ButtonTheme(
                 primary = WhiskrKitTheme.ButtonAppearance.Variant(
                     WhiskrKitTheme.ButtonVariant(backgroundColor = accent, textColor = onAccent),
