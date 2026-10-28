@@ -154,6 +154,7 @@ the `sample` configuration.
 ./gradlew :whiskrkit:verifyRoborazziDebug     # screenshot tests against golden images
 ./gradlew :whiskrkit:recordRoborazziDebug     # re-record golden images
 ./gradlew apiCheck                            # public API compatibility check
+./gradlew :sample:testDebugUnitTest           # playground snippet and persistence tests
 ```
 
 ## Platform compatibility
