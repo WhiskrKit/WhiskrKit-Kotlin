@@ -3,7 +3,7 @@
 
     <application
         android:name=".SampleApplication"
-        android:label="WhiskrKit Sample"
+        android:label="WhiskrKit Playground"
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:supportsRtl="true">
         <activity
