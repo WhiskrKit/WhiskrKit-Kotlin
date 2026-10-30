@@ -18,8 +18,8 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - name: Unit tests (incl. architecture rules)
-        run: ./gradlew :whiskrkit:testDebugUnitTest
+      - name: Unit tests (incl. architecture rules and the sample's snippet check)
+        run: ./gradlew :whiskrkit:testDebugUnitTest :sample:testDebugUnitTest
 
       - name: Screenshot tests
         run: ./gradlew :whiskrkit:verifyRoborazziDebug

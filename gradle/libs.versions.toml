@@ -7,6 +7,8 @@ kotlin = "2.3.10"
 # androidx.compose.runtime:runtime:"). These match compose-bom 2026.04.01.
 compose = "1.11.0"
 composeMaterial3 = "1.4.0"
+# Frozen at 1.7.x upstream; used by the sample app only.
+composeMaterialIcons = "1.7.8"
 coroutines = "1.10.2"
 # 1.8.x is the newest line built against Kotlin 2.1; newer lines drag
 # kotlin-stdlib 2.3 onto consumers' runtime classpath.
@@ -30,6 +32,7 @@ compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", versi
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "composeMaterial3" }
+compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "composeMaterialIcons" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }

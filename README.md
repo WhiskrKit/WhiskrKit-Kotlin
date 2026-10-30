@@ -143,9 +143,12 @@ queued submissions when connectivity returns).
 
 ## Sample app
 
-The `sample/` module demonstrates every presentation mode and question type in
-mock mode — no API key required. Open the project in Android Studio and run
-the `sample` configuration.
+The `sample/` module is the WhiskrKit Playground: one screen to present every
+question type and presentation style in mock mode (no API key required), change
+the survey colors with presets or per color, preview them in light and dark
+mode, and copy a Kotlin snippet that builds the same `WhiskrKitTheme`. Open the
+project in Android Studio and run the `sample` configuration. The playground is
+described in [sample/PLAYGROUND_SPEC.md](sample/PLAYGROUND_SPEC.md).
 
 ## Development
 
@@ -154,6 +157,7 @@ the `sample` configuration.
 ./gradlew :whiskrkit:verifyRoborazziDebug     # screenshot tests against golden images
 ./gradlew :whiskrkit:recordRoborazziDebug     # re-record golden images
 ./gradlew apiCheck                            # public API compatibility check
+./gradlew :sample:testDebugUnitTest           # playground snippet and persistence tests
 ```
 
 ## Platform compatibility
