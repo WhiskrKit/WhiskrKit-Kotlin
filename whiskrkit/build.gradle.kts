@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.maven.publish)
 }
 
-val sdkVersion = "0.1.3"
+val sdkVersion = "0.1.4"
 
 android {
     namespace = "eu.whiskrkit"
