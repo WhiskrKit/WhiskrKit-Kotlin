@@ -173,4 +173,16 @@ class SurveyTemplateDecodingTest {
         assertTrue(response.survey is BannerTemplate)
         assertNull(response.removeFromHistory)
     }
+
+    @Test
+    fun `decodes the language a survey was served in`() {
+        val banner = decode("""{"template":"toast","id":"b1","followUpIdentifier":"f1","language":"nl"}""")
+        assertEquals("nl", banner.language)
+    }
+
+    @Test
+    fun `a survey without a language decodes as before`() {
+        val banner = decode("""{"template":"toast","id":"b1","followUpIdentifier":"f1"}""")
+        assertNull(banner.language)
+    }
 }

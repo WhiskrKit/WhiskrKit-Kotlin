@@ -106,23 +106,25 @@ private fun BoxScope.SurveyPresenter() {
         }
     }
 
-    when (val template = activeTemplate) {
-        null -> Unit
-        is SheetTemplate -> SheetContainer(
-            template = template,
-            onDismiss = { activeTemplate = null },
-        )
-        is FullScreenFormTemplate -> FullScreenContainer(
-            template = template,
-            onDismiss = { activeTemplate = null },
-        )
-        is BannerTemplate -> BannerHost(
-            template = template,
-            onDismiss = { activeTemplate = null },
-            onOpenFollowUp = { followUpId ->
-                activeTemplate = null
-                WhiskrKit.present(followUpId)
-            },
-        )
+    val template = activeTemplate ?: return
+    SurveyLanguage(template.language) {
+        when (template) {
+            is SheetTemplate -> SheetContainer(
+                template = template,
+                onDismiss = { activeTemplate = null },
+            )
+            is FullScreenFormTemplate -> FullScreenContainer(
+                template = template,
+                onDismiss = { activeTemplate = null },
+            )
+            is BannerTemplate -> BannerHost(
+                template = template,
+                onDismiss = { activeTemplate = null },
+                onOpenFollowUp = { followUpId ->
+                    activeTemplate = null
+                    WhiskrKit.present(followUpId)
+                },
+            )
+        }
     }
 }

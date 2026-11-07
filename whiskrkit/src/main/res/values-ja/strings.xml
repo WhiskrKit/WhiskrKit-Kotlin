@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="whiskrkit_submit">送信</string>
+    <string name="whiskrkit_close">閉じる</string>
+    <string name="whiskrkit_required">必須</string>
+    <string name="whiskrkit_give_feedback">フィードバックを送信</string>
+    <string name="whiskrkit_no_thanks">いいえ、結構です</string>
+    <string name="whiskrkit_thumbs_up">はい</string>
+    <string name="whiskrkit_thumbs_down">いいえ</string>
+    <string name="whiskrkit_survey">アンケート</string>
+
+    <string name="whiskrkit_required_scale">%1$d〜%2$dの評価を選んでください</string>
+    <string name="whiskrkit_required_thumbs">いずれかを選んでください</string>
+    <string name="whiskrkit_required_text">この項目は必須です</string>
+    <string name="whiskrkit_required_choice">1つ以上選んでください</string>
+
+    <string name="whiskrkit_a11y_selected">選択済み</string>
+    <string name="whiskrkit_a11y_not_selected">未選択</string>
+    <string name="whiskrkit_a11y_text_field">フィードバック入力欄</string>
+
+    <plurals name="whiskrkit_required_symbol">
+        <item quantity="other">星%1$d〜%2$d個で評価を選んでください</item>
+    </plurals>
+    <plurals name="whiskrkit_a11y_star">
+        <item quantity="other">星%1$d個</item>
+    </plurals>
+</resources>

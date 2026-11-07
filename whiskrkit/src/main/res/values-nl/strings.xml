@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="whiskrkit_submit">Verstuur</string>
+    <string name="whiskrkit_close">Sluit</string>
+    <string name="whiskrkit_required">Verplicht</string>
+    <string name="whiskrkit_give_feedback">Geef feedback</string>
+    <string name="whiskrkit_no_thanks">Nee, bedankt</string>
+    <string name="whiskrkit_thumbs_up">Ja</string>
+    <string name="whiskrkit_thumbs_down">Nee</string>
+    <string name="whiskrkit_survey">Enquête</string>
+
+    <string name="whiskrkit_required_scale">Geef een beoordeling van %1$d tot %2$d</string>
+    <string name="whiskrkit_required_thumbs">Kies een van de opties</string>
+    <string name="whiskrkit_required_text">Dit veld is verplicht</string>
+    <string name="whiskrkit_required_choice">Kies minstens één optie</string>
+
+    <string name="whiskrkit_a11y_selected">Geselecteerd</string>
+    <string name="whiskrkit_a11y_not_selected">Niet geselecteerd</string>
+    <string name="whiskrkit_a11y_text_field">Tekstveld voor feedback</string>
+
+    <plurals name="whiskrkit_required_symbol">
+        <item quantity="one">Geef een beoordeling van %1$d tot %2$d ster</item>
+        <item quantity="other">Geef een beoordeling van %1$d tot %2$d sterren</item>
+    </plurals>
+    <plurals name="whiskrkit_a11y_star">
+        <item quantity="one">%1$d ster</item>
+        <item quantity="other">%1$d sterren</item>
+    </plurals>
+</resources>
