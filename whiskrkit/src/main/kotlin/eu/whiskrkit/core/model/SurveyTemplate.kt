@@ -21,6 +21,9 @@ import kotlinx.serialization.json.jsonPrimitive
 @Serializable(with = SurveyTemplateSerializer::class)
 internal sealed interface SurveyTemplate {
     val id: String
+
+    /** Language the backend served this survey in (e.g. `nl`); WhiskrKit's own strings follow it. */
+    val language: String?
 }
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -31,6 +34,7 @@ internal data class SheetTemplate(
     val description: String? = null,
     val followUpQuestion: String? = null,
     val survey: QuestionTemplate,
+    override val language: String? = null,
     @EncodeDefault(EncodeDefault.Mode.ALWAYS) val template: String = "sheet",
 ) : SurveyTemplate
 
@@ -42,6 +46,7 @@ internal data class FullScreenFormTemplate(
     val subtitle: String? = null,
     val description: String? = null,
     val surveys: List<QuestionTemplate>,
+    override val language: String? = null,
     @EncodeDefault(EncodeDefault.Mode.ALWAYS) val template: String = "fullScreenForm",
 ) : SurveyTemplate
 
@@ -53,6 +58,7 @@ internal data class BannerTemplate(
     val description: String? = null,
     val followUpIdentifier: String? = null,
     val survey: QuestionTemplate? = null,
+    override val language: String? = null,
     @EncodeDefault(EncodeDefault.Mode.ALWAYS) val template: String = "toast",
 ) : SurveyTemplate
 

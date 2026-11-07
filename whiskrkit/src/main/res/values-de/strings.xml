@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="whiskrkit_submit">Senden</string>
+    <string name="whiskrkit_close">Schließen</string>
+    <string name="whiskrkit_required">Erforderlich</string>
+    <string name="whiskrkit_give_feedback">Feedback geben</string>
+    <string name="whiskrkit_no_thanks">Nein, danke</string>
+    <string name="whiskrkit_thumbs_up">Ja</string>
+    <string name="whiskrkit_thumbs_down">Nein</string>
+    <string name="whiskrkit_survey">Umfrage</string>
+
+    <string name="whiskrkit_required_scale">Bitte eine Bewertung zwischen %1$d und %2$d auswählen</string>
+    <string name="whiskrkit_required_thumbs">Bitte eine der Optionen auswählen</string>
+    <string name="whiskrkit_required_text">Dieses Feld ist erforderlich</string>
+    <string name="whiskrkit_required_choice">Bitte mindestens eine Option auswählen</string>
+
+    <string name="whiskrkit_a11y_selected">Ausgewählt</string>
+    <string name="whiskrkit_a11y_not_selected">Nicht ausgewählt</string>
+    <string name="whiskrkit_a11y_text_field">Textfeld für Feedback</string>
+
+    <plurals name="whiskrkit_required_symbol">
+        <item quantity="one">Bitte eine Bewertung zwischen %1$d und %2$d Stern auswählen</item>
+        <item quantity="other">Bitte eine Bewertung zwischen %1$d und %2$d Sternen auswählen</item>
+    </plurals>
+    <plurals name="whiskrkit_a11y_star">
+        <item quantity="one">%1$d Stern</item>
+        <item quantity="other">%1$d Sterne</item>
+    </plurals>
+</resources>

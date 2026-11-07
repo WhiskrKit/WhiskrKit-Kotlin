@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="whiskrkit_submit">提交</string>
+    <string name="whiskrkit_close">关闭</string>
+    <string name="whiskrkit_required">必填</string>
+    <string name="whiskrkit_give_feedback">提供反馈</string>
+    <string name="whiskrkit_no_thanks">不用了，谢谢</string>
+    <string name="whiskrkit_thumbs_up">是</string>
+    <string name="whiskrkit_thumbs_down">否</string>
+    <string name="whiskrkit_survey">问卷调查</string>
+
+    <string name="whiskrkit_required_scale">请选择 %1$d 到 %2$d 之间的评分</string>
+    <string name="whiskrkit_required_thumbs">请选择其中一个选项</string>
+    <string name="whiskrkit_required_text">此字段为必填项</string>
+    <string name="whiskrkit_required_choice">请至少选择一个选项</string>
+
+    <string name="whiskrkit_a11y_selected">已选择</string>
+    <string name="whiskrkit_a11y_not_selected">未选择</string>
+    <string name="whiskrkit_a11y_text_field">反馈文本框</string>
+
+    <plurals name="whiskrkit_required_symbol">
+        <item quantity="other">请选择 %1$d 到 %2$d 星之间的评分</item>
+    </plurals>
+    <plurals name="whiskrkit_a11y_star">
+        <item quantity="other">%1$d 星</item>
+    </plurals>
+</resources>

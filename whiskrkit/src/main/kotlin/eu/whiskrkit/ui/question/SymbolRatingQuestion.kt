@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -58,7 +58,7 @@ internal fun SymbolRatingQuestion(
                     ) {
                         Icon(
                             imageVector = if (isFilled) WhiskrIcons.Star else WhiskrIcons.StarBorder,
-                            contentDescription = stringResource(R.string.whiskrkit_a11y_star, star),
+                            contentDescription = pluralStringResource(R.plurals.whiskrkit_a11y_star, star, star),
                             tint = if (isFilled) StarYellow else MaterialTheme.colorScheme.outline,
                             modifier = Modifier.size(32.dp),
                         )
@@ -67,7 +67,7 @@ internal fun SymbolRatingQuestion(
             }
             if (showError) {
                 RequiredErrorMessage(
-                    stringResource(R.string.whiskrkit_required_symbol, 1, STAR_COUNT),
+                    pluralStringResource(R.plurals.whiskrkit_required_symbol, STAR_COUNT, 1, STAR_COUNT),
                 )
             }
         }

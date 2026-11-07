@@ -10,18 +10,23 @@
     <string name="whiskrkit_survey">Survey</string>
 
     <string name="whiskrkit_required_scale">Select a rating between %1$d and %2$d</string>
-    <string name="whiskrkit_required_symbol">Select a rating between %1$d and %2$d stars</string>
     <string name="whiskrkit_required_thumbs">Select one of the options</string>
     <string name="whiskrkit_required_text">This field is required</string>
     <string name="whiskrkit_required_choice">Select at least one option</string>
 
-    <string name="whiskrkit_char_count">%1$d/%2$d</string>
-
     <string name="whiskrkit_a11y_selected">Selected</string>
     <string name="whiskrkit_a11y_not_selected">Not selected</string>
-    <string name="whiskrkit_a11y_score">Score %1$d</string>
-    <string name="whiskrkit_a11y_x_out_of_y">%1$d out of %2$d</string>
-    <string name="whiskrkit_a11y_star">%1$d stars</string>
     <string name="whiskrkit_a11y_text_field">Feedback text field</string>
-    <string name="whiskrkit_a11y_text_max">Maximum %1$d characters</string>
+
+    <!-- Same in every language, so not translated. -->
+    <string name="whiskrkit_char_count" translatable="false">%1$d/%2$d</string>
+
+    <plurals name="whiskrkit_required_symbol">
+        <item quantity="one">Select a rating between %1$d and %2$d star</item>
+        <item quantity="other">Select a rating between %1$d and %2$d stars</item>
+    </plurals>
+    <plurals name="whiskrkit_a11y_star">
+        <item quantity="one">%1$d star</item>
+        <item quantity="other">%1$d stars</item>
+    </plurals>
 </resources>
