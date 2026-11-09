@@ -132,4 +132,40 @@ class SharedPrefsStorageTest {
         assertNotEquals(a.id, b.id)
         assertNotEquals(a.idempotencyKey, b.idempotencyKey)
     }
+
+    @Test
+    fun `pending submission with attributes round-trips through storage`() {
+        val storage = SharedPrefsSubmissionStorage(context)
+        val now = Instant.parse("2026-06-11T12:00:00Z")
+        val submission = PendingSubmission(
+            surveyId = "survey-1",
+            response = SurveyResponse(
+                results = mapOf("q" to SurveyAnswer.Text("hello")),
+                attributes = mapOf(
+                    "plan" to AttributeValue.Text("pro"),
+                    "sessions" to AttributeValue.Integer(3),
+                    "beta" to AttributeValue.Bool(true),
+                ),
+            ),
+            timestamp = now,
+            expiresAt = now.plus(7, ChronoUnit.DAYS),
+        )
+
+        storage.save(listOf(submission))
+        assertEquals(listOf(submission), storage.load())
+    }
+
+    @Test
+    fun `pending submission persisted before attributes existed still decodes`() {
+        val prefs = context.getSharedPreferences("eu.whiskrkit", android.content.Context.MODE_PRIVATE)
+        val legacy = """[{"id":"a","idempotencyKey":"b","surveyId":"survey-1",""" +
+            """"response":{"results":{"q":{"npsRating":7}}},""" +
+            """"timestamp":"2026-06-11T12:00:00Z","expiresAt":"2099-06-18T12:00:00Z","retryCount":1}]"""
+        prefs.edit().putString("pendingSubmissions", legacy).apply()
+
+        val loaded = SharedPrefsSubmissionStorage(context).load()
+        assertEquals(1, loaded.size)
+        assertNull(loaded.single().response.attributes)
+        assertEquals(mapOf("q" to SurveyAnswer.NpsRating(7)), loaded.single().response.results)
+    }
 }

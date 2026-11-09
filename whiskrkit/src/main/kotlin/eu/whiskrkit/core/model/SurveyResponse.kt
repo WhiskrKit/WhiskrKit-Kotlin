@@ -1,5 +1,7 @@
 package eu.whiskrkit.core.model
 
+import eu.whiskrkit.core.AttributeValue
+import eu.whiskrkit.core.AttributeValueSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -27,6 +29,11 @@ import kotlinx.serialization.json.put
 @Serializable
 internal data class SurveyResponse(
     val results: Map<String, SurveyAnswer> = emptyMap(),
+    /**
+     * Global survey attributes attached at submit time. Null (omitted from the
+     * JSON) when there are none.
+     */
+    val attributes: Map<String, @Serializable(with = AttributeValueSerializer::class) AttributeValue>? = null,
 )
 
 @Serializable(with = SurveyAnswerSerializer::class)

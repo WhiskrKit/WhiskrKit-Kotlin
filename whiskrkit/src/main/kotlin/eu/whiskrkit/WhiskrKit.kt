@@ -1,11 +1,15 @@
 package eu.whiskrkit
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.net.ConnectivityManager
 import android.net.Network
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
+import eu.whiskrkit.core.AttributeSanitizer
+import eu.whiskrkit.core.AttributeStore
+import eu.whiskrkit.core.AttributeValue
 import eu.whiskrkit.core.ConfigurationService
 import eu.whiskrkit.core.MockConfigurationService
 import eu.whiskrkit.core.MockEligibilityService
@@ -59,6 +63,11 @@ public object WhiskrKit {
     internal val pendingSurvey: MutableStateFlow<PendingSurveyRequest?> = MutableStateFlow(null)
 
     /** Auto-trigger dedup: applies to [eu.whiskrkit.ui.WhiskrKitSurvey] only. */
+    internal val attributeStore = AttributeStore()
+
+    /** True when the host app is debuggable; gates the personal-data hints. */
+    internal var debugLogging: Boolean = false
+
     internal val autoCheckedIdentifiers: MutableSet<String> = mutableSetOf()
 
     private var lifecycleObserversRegistered = false
@@ -81,6 +90,7 @@ public object WhiskrKit {
     ) {
         val appContext = context.applicationContext
         autoCheckedIdentifiers.clear()
+        debugLogging = (appContext.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
         if (withMockedSurveys) {
             val mockService = MockConfigurationService()
@@ -131,6 +141,72 @@ public object WhiskrKit {
         }
     }
 
+    /**
+     * Sets a global attribute sent with every survey response, for example the
+     * user's plan, to segment results in the dashboard. Attributes live in memory
+     * only, so set them again at launch. Safe to call from any thread.
+     *
+     * Do not send personal data (emails, phone numbers, names, IBANs, card
+     * numbers). The server drops it.
+     *
+     * Limits: 20 attributes, keys up to 64 characters, text values up to 256
+     * characters. Anything beyond is trimmed.
+     */
+    public fun setAttribute(key: String, value: String) {
+        attributeStore.set(key, AttributeValue.Text(value))
+    }
+
+    /** Sets a boolean global attribute. See [setAttribute] with a string. */
+    public fun setAttribute(key: String, value: Boolean) {
+        attributeStore.set(key, AttributeValue.Bool(value))
+    }
+
+    /** Sets an integer global attribute. See [setAttribute] with a string. */
+    public fun setAttribute(key: String, value: Int) {
+        attributeStore.set(key, AttributeValue.Integer(value.toLong()))
+    }
+
+    /** Sets an integer global attribute. See [setAttribute] with a string. */
+    public fun setAttribute(key: String, value: Long) {
+        attributeStore.set(key, AttributeValue.Integer(value))
+    }
+
+    /**
+     * Sets a decimal global attribute. NaN and infinite values are ignored.
+     * See [setAttribute] with a string.
+     */
+    public fun setAttribute(key: String, value: Double) {
+        if (!value.isFinite()) {
+            WhiskrLog.w(WhiskrLog.CORE, "Ignoring non-finite value for attribute '$key'")
+            return
+        }
+        attributeStore.set(key, AttributeValue.Decimal(value))
+    }
+
+    /**
+     * Merges several global attributes at once. Supported value types are
+     * String, Boolean, Int, Long, Double and Float. Other types and non-finite
+     * numbers are ignored and logged.
+     */
+    public fun setAttributes(attributes: Map<String, Any>) {
+        for ((key, value) in attributes) {
+            if (AttributeValue.of(value) == null) {
+                WhiskrLog.w(WhiskrLog.CORE, "Ignoring attribute '$key': unsupported value type")
+            }
+        }
+        attributeStore.setAll(attributes)
+    }
+
+    /** Removes one global attribute. */
+    public fun removeAttribute(key: String) {
+        attributeStore.remove(key)
+    }
+
+    /** Removes all global attributes. */
+    public fun clearAttributes() {
+        attributeStore.clear()
+    }
+
     // region Internal API used by the UI layer
 
     /**
@@ -179,10 +255,23 @@ public object WhiskrKit {
             WhiskrLog.e(WhiskrLog.CORE, "WhiskrKit is not initialized. Call initialize() first.")
             return
         }
-        val success = service.submitSurveyResponse(surveyId, response)
+        val success = service.submitSurveyResponse(surveyId, withAttributes(response))
         if (success) {
             trackSurveyCompletion(surveyId)
         }
+    }
+
+    /**
+     * Attaches the attributes as they are right now. Taken at submit time, so a
+     * change made while the survey was open is what gets sent. A queued retry
+     * keeps these, because the queue stores the response.
+     */
+    private fun withAttributes(response: SurveyResponse): SurveyResponse {
+        val sanitized = AttributeSanitizer.sanitize(attributeStore.snapshot())
+        if (debugLogging) {
+            sanitized.warnings.forEach { WhiskrLog.w(WhiskrLog.CORE, it) }
+        }
+        return response.copy(attributes = sanitized.attributes.ifEmpty { null })
     }
 
     // endregion

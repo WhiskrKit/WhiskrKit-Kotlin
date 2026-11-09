@@ -1,5 +1,6 @@
 package eu.whiskrkit.core.model
 
+import eu.whiskrkit.core.AttributeValue
 import eu.whiskrkit.core.serialization.WireJson
 import kotlinx.serialization.SerializationException
 import org.junit.Assert.assertEquals
@@ -74,5 +75,53 @@ class SurveyResponseSerializationTest {
     @Test
     fun `empty results round-trips`() {
         assertEquals(SurveyResponse(), decode(encode(SurveyResponse())))
+    }
+
+    @Test
+    fun `attributes encode as plain JSON primitives next to results`() {
+        val response = SurveyResponse(
+            results = mapOf("q1" to SurveyAnswer.NpsRating(7)),
+            attributes = linkedMapOf(
+                "plan" to AttributeValue.Text("pro"),
+                "sessions" to AttributeValue.Integer(3),
+                "ratio" to AttributeValue.Decimal(0.5),
+                "beta" to AttributeValue.Bool(true),
+            ),
+        )
+        assertEquals(
+            """{"results":{"q1":{"npsRating":7}},"attributes":{"plan":"pro","sessions":3,"ratio":0.5,"beta":true}}""",
+            encode(response),
+        )
+    }
+
+    @Test
+    fun `integers are never encoded with a fraction`() {
+        val json = encode(SurveyResponse(attributes = mapOf("n" to AttributeValue.Integer(42), "big" to AttributeValue.Integer(5_000_000_000))))
+        assertEquals("""{"attributes":{"n":42,"big":5000000000}}""", json)
+    }
+
+    @Test
+    fun `null attributes are omitted`() {
+        assertEquals("""{"results":{"q1":{"npsRating":7}}}""", encode(SurveyResponse(mapOf("q1" to SurveyAnswer.NpsRating(7)), attributes = null)))
+    }
+
+    @Test
+    fun `attributes round-trip including text that looks like a number`() {
+        val original = SurveyResponse(
+            attributes = mapOf(
+                "plan" to AttributeValue.Text("pro"),
+                "zipish" to AttributeValue.Text("123"),
+                "truthy" to AttributeValue.Text("true"),
+                "n" to AttributeValue.Integer(3),
+                "d" to AttributeValue.Decimal(3.0),
+                "b" to AttributeValue.Bool(false),
+            ),
+        )
+        assertEquals(original, decode(encode(original)))
+    }
+
+    @Test
+    fun `json without attributes still decodes`() {
+        assertEquals(null, decode("""{"results":{}}""").attributes)
     }
 }

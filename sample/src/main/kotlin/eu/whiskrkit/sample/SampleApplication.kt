@@ -19,6 +19,8 @@ class SampleApplication : Application() {
             apiKey = "playground",
             withMockedSurveys = true,
         )
+        // Global attributes ride along with every response (visible in the mock log).
+        WhiskrKit.setAttribute("plan", "playground")
         themeSettings = ThemeSettings(getSharedPreferences(ThemeSettings.PREFERENCES_NAME, Context.MODE_PRIVATE))
     }
 }

@@ -1,6 +1,7 @@
 package eu.whiskrkit.core.queue
 
 import eu.whiskrkit.FakeSubmissionStorage
+import eu.whiskrkit.core.AttributeValue
 import eu.whiskrkit.core.model.SurveyAnswer
 import eu.whiskrkit.core.model.SurveyResponse
 import org.junit.Assert.assertEquals
@@ -127,5 +128,18 @@ class SubmissionQueueTest {
         val expired = item.copy(expiresAt = baseTime.minusSeconds(1))
         assertTrue(expired.isExpired(baseTime))
         assertFalse(expired.canRetryNow(baseTime))
+    }
+
+    @Test
+    fun `queued submission keeps the attributes it was created with`() {
+        val response = SurveyResponse(
+            results = mapOf("q" to SurveyAnswer.NpsRating(5)),
+            attributes = mapOf("plan" to AttributeValue.Text("free")),
+        )
+        val pending = PendingSubmission(surveyId = "survey-1", response = response, timestamp = currentTime, expiresAt = currentTime.plus(7, ChronoUnit.DAYS))
+        queue.enqueue(pending)
+
+        val reloaded = SubmissionQueue(storage) { currentTime }
+        assertEquals(response, reloaded.getSubmission(pending.id)?.response)
     }
 }

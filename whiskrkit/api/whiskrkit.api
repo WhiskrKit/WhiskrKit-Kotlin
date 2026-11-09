@@ -10,9 +10,17 @@ public final class eu/whiskrkit/WhiskrKit {
 	public static final field $stable I
 	public static final field INSTANCE Leu/whiskrkit/WhiskrKit;
 	public final fun checkAndPresent (Ljava/lang/String;)V
+	public final fun clearAttributes ()V
 	public final fun initialize (Landroid/content/Context;Ljava/lang/String;Z)V
 	public static synthetic fun initialize$default (Leu/whiskrkit/WhiskrKit;Landroid/content/Context;Ljava/lang/String;ZILjava/lang/Object;)V
 	public final fun present (Ljava/lang/String;)V
+	public final fun removeAttribute (Ljava/lang/String;)V
+	public final fun setAttribute (Ljava/lang/String;D)V
+	public final fun setAttribute (Ljava/lang/String;I)V
+	public final fun setAttribute (Ljava/lang/String;J)V
+	public final fun setAttribute (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun setAttribute (Ljava/lang/String;Z)V
+	public final fun setAttributes (Ljava/util/Map;)V
 }
 
 public final class eu/whiskrkit/theme/WhiskrKitTheme {

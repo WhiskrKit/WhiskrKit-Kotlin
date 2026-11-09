@@ -1,5 +1,6 @@
 package eu.whiskrkit.core.network
 
+import eu.whiskrkit.core.AttributeValue
 import eu.whiskrkit.core.model.SheetTemplate
 import eu.whiskrkit.core.model.SurveyAnswer
 import eu.whiskrkit.core.model.SurveyResponse
@@ -138,5 +139,24 @@ class NetworkServiceTest {
         assertEquals("/api/v1/survey/survey-1/submit", request.path)
         assertEquals("idem-1", request.getHeader("X-Idempotency-Key"))
         assertEquals("""{"results":{"q1":{"npsRating":7}}}""", request.body.readUtf8())
+    }
+
+    @Test
+    fun `submit body contains attributes next to results`() = runTest {
+        server.enqueue(MockResponse().setResponseCode(200))
+
+        service.submitResponse(
+            surveyId = "survey-1",
+            response = SurveyResponse(
+                results = mapOf("q1" to SurveyAnswer.NpsRating(7)),
+                attributes = mapOf("plan" to AttributeValue.Text("pro"), "sessions" to AttributeValue.Integer(3)),
+            ),
+            idempotencyKey = "idem-1",
+        )
+
+        assertEquals(
+            """{"results":{"q1":{"npsRating":7}},"attributes":{"plan":"pro","sessions":3}}""",
+            server.takeRequest().body.readUtf8(),
+        )
     }
 }
