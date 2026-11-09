@@ -42,7 +42,7 @@ internal class MockConfigurationService : ConfigurationService {
     override suspend fun submitSurveyResponse(surveyId: String, response: SurveyResponse): Boolean {
         WhiskrLog.i(
             WhiskrLog.NETWORKING,
-            "Mock: saved surveyId=$surveyId response=${response.results}",
+            "Mock: saved surveyId=$surveyId response=${response.results} attributes=${response.attributes}",
         )
         return true
     }

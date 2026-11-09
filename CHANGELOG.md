@@ -9,6 +9,10 @@ Add a line under **Unreleased** in each pull request. When releasing, rename
 ## Unreleased
 
 ### Added
+- Global survey attributes: `WhiskrKit.setAttribute`, `setAttributes`,
+  `removeAttribute` and `clearAttributes` attach a string, number or boolean to
+  every survey response for segmentation. Personal data is dropped by the
+  server and must not be sent.
 - Translations of all built-in strings and TalkBack labels into Dutch, German,
   French, Spanish, Italian, Portuguese, Japanese, Korean and Simplified
   Chinese.

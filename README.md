@@ -99,6 +99,33 @@ Button(onClick = { WhiskrKit.present(surveyId = "your-survey-id") }) {
 > A `WhiskrKitHost` must be in the composition for surveys to appear. A trigger
 > fired before the host exists is delivered to the first host that appears.
 
+## Survey attributes
+
+Attach context about the user to every response, for example their plan, to
+segment results in the dashboard. Values are a string, number or boolean:
+
+```kotlin
+WhiskrKit.setAttribute("plan", "pro")
+WhiskrKit.setAttribute("sessions", 3)
+WhiskrKit.setAttribute("beta", true)
+
+WhiskrKit.setAttributes(mapOf("plan" to "pro", "sessions" to 3))
+WhiskrKit.removeAttribute("beta")
+WhiskrKit.clearAttributes()
+```
+
+Attributes are global and held in memory only, so set them again at launch.
+They can be set from any thread. The values in place when the user submits are
+the ones sent, and a response that has to be retried keeps its attributes.
+
+Limits: 20 attributes, keys of 1 to 64 characters, text values up to 256
+characters, 2 KB in total. The SDK trims anything beyond that.
+
+> **Do not send personal data.** Emails, phone numbers, names, IBANs and card
+> numbers are dropped by the server, and attributes with keys such as `email`,
+> `phone`, `name` or `address` are dropped too. In debug builds the SDK logs a
+> warning when an attribute looks like personal data.
+
 ## Theming
 
 Out of the box, surveys match your Material 3 theme — colors, typography, dark
