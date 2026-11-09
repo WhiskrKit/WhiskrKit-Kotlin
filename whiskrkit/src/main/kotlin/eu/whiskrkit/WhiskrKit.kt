@@ -66,6 +66,7 @@ public object WhiskrKit {
     internal val attributeStore = AttributeStore()
 
     /** True when the host app is debuggable; gates the personal-data hints. */
+    @Volatile
     internal var debugLogging: Boolean = false
 
     internal val autoCheckedIdentifiers: MutableSet<String> = mutableSetOf()
@@ -191,7 +192,7 @@ public object WhiskrKit {
     public fun setAttributes(attributes: Map<String, Any>) {
         for ((key, value) in attributes) {
             if (AttributeValue.of(value) == null) {
-                WhiskrLog.w(WhiskrLog.CORE, "Ignoring attribute '$key': unsupported value type")
+                WhiskrLog.w(WhiskrLog.CORE, "Ignoring attribute '$key': unsupported value type or non-finite number")
             }
         }
         attributeStore.setAll(attributes)

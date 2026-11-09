@@ -80,6 +80,11 @@ class AttributeStoreTest {
     }
 
     @Test
+    fun `float keeps its decimal form`() {
+        assertEquals(AttributeValue.Decimal(1.1), AttributeValue.of(1.1f))
+    }
+
+    @Test
     fun `non finite numbers are rejected`() {
         store.setAll(mapOf("nan" to Double.NaN, "inf" to Double.POSITIVE_INFINITY, "ok" to 1.0))
         assertEquals(setOf("ok"), store.snapshot().keys)

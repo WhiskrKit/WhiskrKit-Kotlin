@@ -37,7 +37,8 @@ internal sealed interface AttributeValue {
             is Short -> Integer(value.toLong())
             is Byte -> Integer(value.toLong())
             is Double -> if (value.isFinite()) Decimal(value) else null
-            is Float -> if (value.isFinite()) Decimal(value.toDouble()) else null
+            // Via the shortest decimal form so 1.1f stays 1.1, not 1.100000023841858.
+            is Float -> if (value.isFinite()) Decimal(value.toString().toDouble()) else null
             else -> null
         }
     }
