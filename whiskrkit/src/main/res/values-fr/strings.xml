@@ -8,6 +8,7 @@
     <string name="whiskrkit_thumbs_up">Oui</string>
     <string name="whiskrkit_thumbs_down">Non</string>
     <string name="whiskrkit_survey">Sondage</string>
+    <string name="whiskrkit_powered_by">Propulsé par %1$s</string>
 
     <string name="whiskrkit_required_scale">Veuillez sélectionner une note entre %1$d et %2$d</string>
     <string name="whiskrkit_required_thumbs">Veuillez sélectionner l’une des options</string>

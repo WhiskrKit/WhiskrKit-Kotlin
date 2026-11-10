@@ -8,6 +8,7 @@
     <string name="whiskrkit_thumbs_up">Sim</string>
     <string name="whiskrkit_thumbs_down">Não</string>
     <string name="whiskrkit_survey">Pesquisa</string>
+    <string name="whiskrkit_powered_by">Desenvolvido por %1$s</string>
 
     <string name="whiskrkit_required_scale">Selecione uma avaliação entre %1$d e %2$d</string>
     <string name="whiskrkit_required_thumbs">Selecione uma das opções</string>
