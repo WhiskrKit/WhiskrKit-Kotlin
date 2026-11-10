@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
@@ -37,6 +38,7 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -85,6 +88,7 @@ internal fun PlaygroundScreen(
             }
 
             surveySections()
+            brandingSection(settings)
             presetSection(settings)
             colorSection(settings, appearance, onAppearanceChange, onEdit = { editingRole = it })
             codeSection(themeSnippet(settings.customColors))
@@ -119,6 +123,30 @@ private fun LazyListScope.surveySections() {
         }
     }
     item { SectionFooter("Surveys are mocked: responses and events are never sent to WhiskrKit.") }
+}
+
+private fun LazyListScope.brandingSection(settings: ThemeSettings) {
+    item { SectionHeader("Branding") }
+    item {
+        ListItem(
+            headlineContent = { Text("Show \"Powered by WhiskrKit\"") },
+            supportingContent = { Text("Sheets and banners with a submit button") },
+            trailingContent = {
+                Switch(checked = settings.brandingVisible, onCheckedChange = null)
+            },
+            modifier = Modifier.toggleable(
+                value = settings.brandingVisible,
+                role = Role.Switch,
+                onValueChange = settings::setBranding,
+            ),
+        )
+    }
+    item {
+        SectionFooter(
+            "In a real app the server decides. This only changes the mocked surveys, " +
+                "so you can preview the badge in both styles and themes.",
+        )
+    }
 }
 
 private fun LazyListScope.presetSection(settings: ThemeSettings) {

@@ -67,6 +67,17 @@ presents that mocked survey immediately (section 5). Below the last of these two
 sections, a footer reads: *"Surveys are mocked: responses and events are never sent
 to WhiskrKit."*
 
+### 3.1b "Branding"
+
+One switch, **"Show "Powered by WhiskrKit""** (summary: "Sheets and banners with a submit
+button"), with a footer: *"In a real app the server decides. This only changes the
+mocked surveys, so you can preview the badge in both styles and themes."* Every mocked
+sheet and banner (the toast with only follow-up buttons has no submit button, and the
+full-screen form never shows it) then comes with `branding: { "visible": <switch> }`,
+the same shape the server sends. The switch is on by default, applies at once and is
+saved under the key `whiskrkit.playground.branding` (a boolean). It is separate from
+the theme, so presets and the Code snippet don't change it.
+
 ### 3.2 "Presets"
 
 One row per preset (section 7) showing the name, a row of six small swatches (the
