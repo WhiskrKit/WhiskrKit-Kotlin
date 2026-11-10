@@ -36,8 +36,8 @@ private const val BRAND_NAME = "WhiskrKit"
  * Static on purpose: no animation, not tappable, no link. Logo and text are one
  * accessibility element, read after the submit button.
  *
- * @param textColor the theme's secondary text color; swapped for black or white
- *   when it wouldn't reach 4.5:1 on [background].
+ * @param textColor the theme's secondary text color; darkened or lightened just
+ *   enough when it wouldn't reach 4.5:1 on [background].
  * @param background what the badge sits on, for the contrast check.
  * @param fontFamily the theme's font, so the badge matches the text around it; the
  *   size stays caption-sized.

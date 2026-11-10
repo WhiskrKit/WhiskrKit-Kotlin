@@ -3,6 +3,7 @@ package eu.whiskrkit.theme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.isSpecified
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
 
 /** WCAG 2.x minimum contrast for normal-size text (level AA). */
@@ -25,9 +26,15 @@ internal fun contrastRatio(
     return (maxOf(a, b) + 0.05f) / (minOf(a, b) + 0.05f)
 }
 
+/** Blend step for [readableColor], as a fraction of the way to black or white. */
+internal const val BLEND_STEP = 0.01f
+
 /**
- * [preferred] when it reads at [MIN_TEXT_CONTRAST] or better on [background],
- * otherwise black or white, whichever contrasts more.
+ * [preferred] when it reads at [MIN_TEXT_CONTRAST] or better on [background].
+ * Otherwise [preferred] blended toward black (on a light background) or white (on
+ * a dark one), in [BLEND_STEP] steps, until it does: the smallest change, so it
+ * stays as close to the theme's look as possible. Pure black or white (whichever
+ * contrasts more) is the last resort, when no blend gets there.
  */
 internal fun readableColor(
     preferred: Color,
@@ -39,5 +46,13 @@ internal fun readableColor(
     }
     val black = contrastRatio(Color.Black, background, backdrop)
     val white = contrastRatio(Color.White, background, backdrop)
-    return if (black >= white) Color.Black else Color.White
+    val target = if (black >= white) Color.Black else Color.White
+    if (preferred.isSpecified) {
+        val steps = (1f / BLEND_STEP).toInt()
+        for (step in 1 until steps) {
+            val blended = lerp(preferred, target, step * BLEND_STEP)
+            if (contrastRatio(blended, background, backdrop) >= MIN_TEXT_CONTRAST) return blended
+        }
+    }
+    return target
 }
