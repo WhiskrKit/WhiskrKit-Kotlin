@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import eu.whiskrkit.WhiskrKit
 import eu.whiskrkit.theme.WhiskrKitTheme
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -22,19 +21,6 @@ internal class ThemeSettings(private val preferences: SharedPreferences) {
     /** Custom colors (`#RRGGBB`) keyed by [ColorRole.id]. A role without an entry uses its Material default. */
     var customColors: Map<String, String> by mutableStateOf(decodeColors(preferences.getString(STORAGE_KEY, null)))
         private set
-
-    /**
-     * Whether the mocked sheets and banners show the "Powered by WhiskrKit" badge,
-     * as the server would ask for them. On by default so the badge is easy to find.
-     */
-    var brandingVisible: Boolean by mutableStateOf(preferences.getBoolean(BRANDING_KEY, true))
-        private set
-
-    fun setBranding(visible: Boolean) {
-        brandingVisible = visible
-        preferences.edit().putBoolean(BRANDING_KEY, visible).apply()
-        WhiskrKit.setMockedBrandingVisible(visible)
-    }
 
     /** The preset the current colors are equal to, if any. */
     val matchingPreset: ThemePreset?
@@ -54,7 +40,6 @@ internal class ThemeSettings(private val preferences: SharedPreferences) {
     companion object {
         const val PREFERENCES_NAME = "whiskrkit.playground"
         const val STORAGE_KEY = "whiskrkit.playground.colors"
-        const val BRANDING_KEY = "whiskrkit.playground.branding"
     }
 }
 

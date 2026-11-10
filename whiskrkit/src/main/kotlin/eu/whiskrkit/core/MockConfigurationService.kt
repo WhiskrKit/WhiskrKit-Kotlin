@@ -27,10 +27,6 @@ internal class MockConfigurationService : ConfigurationService {
 
     private val templates: Map<String, SurveyTemplate> = buildTemplates()
 
-    /** Whether the mocked sheets and banners ask for the "Powered by WhiskrKit" badge. */
-    @Volatile
-    var brandingVisible: Boolean = false
-
     override fun configure(apiKey: String) {
         // Mock service doesn't need real API configuration.
     }
@@ -42,8 +38,8 @@ internal class MockConfigurationService : ConfigurationService {
     override suspend fun fetchSurveyTemplate(identifier: String): SurveyTemplate? {
         delay(500) // Simulate network delay.
         return when (val template = templates[identifier]) {
-            is SheetTemplate -> template.copy(branding = Branding(brandingVisible))
-            is BannerTemplate -> template.copy(branding = Branding(brandingVisible))
+            is SheetTemplate -> template.copy(branding = MOCK_BRANDING)
+            is BannerTemplate -> template.copy(branding = MOCK_BRANDING)
             else -> template
         }
     }
@@ -62,6 +58,9 @@ internal class MockConfigurationService : ConfigurationService {
             "Mock: '${event.name.lowercase()}' (${trigger.name.lowercase()}) impression for surveyId=$surveyId",
         )
     }
+
+    /** Mocked sheets and banners always ask for the badge, so it can be previewed. */
+    private val MOCK_BRANDING = Branding(visible = true)
 
     private fun buildTemplates(): Map<String, SurveyTemplate> = mapOf(
         // Banner ("toast" on the wire) templates

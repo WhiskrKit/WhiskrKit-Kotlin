@@ -65,18 +65,12 @@ One tappable row per survey descriptor (section 4), grouped by the descriptor's
 `group`. Each row shows an icon, the name and a one-line summary. Tapping a row
 presents that mocked survey immediately (section 5). Below the last of these two
 sections, a footer reads: *"Surveys are mocked: responses and events are never sent
-to WhiskrKit."*
+to WhiskrKit. Sheets and banners always show the "Powered by WhiskrKit" badge, so you
+can preview it in both styles and themes."*
 
-### 3.1b "Branding"
-
-One switch, **"Show "Powered by WhiskrKit""** (summary: "Sheets and banners with a submit
-button"), with a footer: *"In a real app the server decides. This only changes the
-mocked surveys, so you can preview the badge in both styles and themes."* Every mocked
-sheet and banner (the toast with only follow-up buttons has no submit button, and the
-full-screen form never shows it) then comes with `branding: { "visible": <switch> }`,
-the same shape the server sends. The switch is on by default, applies at once and is
-saved under the key `whiskrkit.playground.branding` (a boolean). It is separate from
-the theme, so presets and the Code snippet don't change it.
+Mocked sheets and banners always come with `branding: { "visible": true }`, the shape
+the server sends (a banner with only follow-up buttons has no submit button, and the
+full-screen form never shows the badge). There is no switch for it.
 
 ### 3.2 "Presets"
 

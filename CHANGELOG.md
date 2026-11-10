@@ -14,12 +14,12 @@ Add a line under **Unreleased** in each pull request. When releasing, rename
 - A small "Powered by WhiskrKit" badge below the submit button of sheets and
   banners, shown only when the server asks for it (`branding.visible`). A missing
   or malformed `branding` hides it and never affects the survey. The badge uses
-  the theme's secondary text color, falling back to black or white when that
-  would be under 4.5:1 contrast, scales with the font size and is read by
+  the theme's secondary text color, moved toward black or white just enough
+  when that would be under 4.5:1 contrast, scales with the font size and is read by
   TalkBack as one element after the submit button. Full-screen forms and banners
   with only follow-up buttons don't show it.
-- `WhiskrKit.setMockedBrandingVisible` previews the badge on mocked surveys. The
-  sample playground has a switch for it.
+- Mocked surveys (`withMockedSurveys = true`) always show the badge on sheets and
+  banners, so it can be previewed in both styles and themes.
 - Global survey attributes: `WhiskrKit.setAttribute`, `setAttributes`,
   `removeAttribute` and `clearAttributes` attach a string, number or boolean to
   every survey response for segmentation. Personal data is dropped by the

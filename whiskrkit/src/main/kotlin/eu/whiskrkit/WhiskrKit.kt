@@ -117,16 +117,6 @@ public object WhiskrKit {
     }
 
     /**
-     * Shows or hides the "Powered by WhiskrKit" badge on the mocked sheet and
-     * banner surveys, so both looks can be previewed. Only affects mock mode
-     * (`withMockedSurveys = true`) and must be called after [initialize]; real surveys show the badge when the server
-     * says so.
-     */
-    public fun setMockedBrandingVisible(visible: Boolean) {
-        (configurationService as? MockConfigurationService)?.brandingVisible = visible
-    }
-
-    /**
      * Imperatively presents a survey, bypassing eligibility checks — for example
      * from a feedback button or a push notification handler.
      *
