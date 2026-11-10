@@ -182,6 +182,7 @@ internal fun SheetContent(
         if (template.branding.isVisible) {
             PoweredByBadge(
                 textColor = theme.subtitle.color,
+                fontFamily = theme.subtitle.textStyle.fontFamily,
                 background = theme.sheetBackground,
             )
         }

@@ -2,6 +2,7 @@ package eu.whiskrkit.theme
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.luminance
 
 /** WCAG 2.x minimum contrast for normal-size text (level AA). */
@@ -40,5 +41,3 @@ internal fun readableColor(
     val white = contrastRatio(Color.White, background, backdrop)
     return if (black >= white) Color.Black else Color.White
 }
-
-private val Color.isSpecified: Boolean get() = this != Color.Unspecified

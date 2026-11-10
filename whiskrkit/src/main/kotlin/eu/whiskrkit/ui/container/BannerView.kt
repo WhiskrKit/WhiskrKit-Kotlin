@@ -203,6 +203,7 @@ internal fun BannerContent(
                 if (template.branding.isVisible) {
                     PoweredByBadge(
                         textColor = theme.subheadline.color,
+                fontFamily = theme.subheadline.textStyle.fontFamily,
                         background = theme.bannerBackground,
                     )
                 }

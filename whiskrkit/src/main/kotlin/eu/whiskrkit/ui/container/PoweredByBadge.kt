@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,7 +19,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
 import eu.whiskrkit.R
 import eu.whiskrkit.theme.readableColor
@@ -36,19 +39,24 @@ private const val BRAND_NAME = "WhiskrKit"
  * @param textColor the theme's secondary text color; swapped for black or white
  *   when it wouldn't reach 4.5:1 on [background].
  * @param background what the badge sits on, for the contrast check.
+ * @param fontFamily the theme's font, so the badge matches the text around it; the
+ *   size stays caption-sized.
  */
 @Composable
 internal fun PoweredByBadge(
     textColor: Color,
     background: Color,
+    fontFamily: FontFamily? = null,
     modifier: Modifier = Modifier,
 ) {
     val label = stringResource(R.string.whiskrkit_powered_by, BRAND_NAME)
-    val style = MaterialTheme.typography.bodySmall
+    val style = MaterialTheme.typography.bodySmall.let { if (fontFamily != null) it.copy(fontFamily = fontFamily) else it }
     // Compose's default text backdrop: what shows through a translucent background.
-    val color = readableColor(textColor, background, MaterialTheme.colorScheme.surface)
-    // Sized in sp so the logo grows with the user's font size, like the text.
-    val logoSize = with(LocalDensity.current) { style.fontSize.toDp() }
+    val surface = MaterialTheme.colorScheme.surface
+    val color = remember(textColor, background, surface) { readableColor(textColor, background, surface) }
+    // Sized in sp so the logo grows with the user's font size, like the text. A host
+    // typography without an sp size must not crash the survey: use the default.
+    val logoSize = with(LocalDensity.current) { (style.fontSize.takeIf { it.isSp } ?: 12.sp).toDp() }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
