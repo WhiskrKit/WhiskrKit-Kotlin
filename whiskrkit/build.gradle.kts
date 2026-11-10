@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)
+    // Registers the activity compose-rule tests launch.
+    testImplementation(libs.compose.ui.test.manifest)
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)

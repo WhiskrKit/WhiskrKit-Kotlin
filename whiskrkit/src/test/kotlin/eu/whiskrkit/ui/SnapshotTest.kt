@@ -23,7 +23,10 @@ import eu.whiskrkit.core.model.SymbolRatingTemplate
 import eu.whiskrkit.core.model.TextSurveyTemplate
 import eu.whiskrkit.core.model.ThumbsRating
 import eu.whiskrkit.core.model.ThumbsSurveyTemplate
+import androidx.compose.ui.graphics.Color
+import eu.whiskrkit.core.model.Branding
 import eu.whiskrkit.theme.LocalWhiskrKitTheme
+import eu.whiskrkit.theme.WhiskrKitTheme
 import eu.whiskrkit.theme.resolveWhiskrTheme
 import eu.whiskrkit.ui.container.BannerContent
 import eu.whiskrkit.ui.container.FullScreenContent
@@ -49,10 +52,10 @@ import org.robolectric.annotation.GraphicsMode
 @Config(sdk = [35], qualifiers = "w411dp-h914dp-normal-long-notround-any-440dpi-keyshidden-nonav")
 class SnapshotTest {
 
-    private fun snap(dark: Boolean = false, content: @Composable () -> Unit) {
+    private fun snap(dark: Boolean = false, theme: WhiskrKitTheme? = null, content: @Composable () -> Unit) {
         captureRoboImage {
             MaterialTheme(colorScheme = if (dark) darkColorScheme() else lightColorScheme()) {
-                CompositionLocalProvider(LocalWhiskrKitTheme provides resolveWhiskrTheme(null)) {
+                CompositionLocalProvider(LocalWhiskrKitTheme provides resolveWhiskrTheme(theme)) {
                     Surface {
                         Box(modifier = Modifier.padding(16.dp)) {
                             content()
@@ -305,4 +308,81 @@ class SnapshotTest {
             )
         }
     }
+
+    // region "Powered by WhiskrKit" badge
+
+    private val branded = Branding(visible = true)
+
+    private fun brandedSheet() = SheetTemplate(
+        id = "s1",
+        title = "Quick feedback",
+        description = "We'd love to hear from you",
+        survey = ThumbsSurveyTemplate(id = "q1", isRequired = false),
+        branding = branded,
+    )
+
+    private fun brandedBanner() = BannerTemplate(
+        id = "t1",
+        title = "Planning your trip",
+        description = "How satisfied are you with our new planner?",
+        survey = ThumbsSurveyTemplate(id = "q1", isRequired = false),
+        branding = branded,
+    )
+
+    @Composable
+    private fun Sheet(template: SheetTemplate) = SheetContent(template, onClose = {}, onSubmitted = {})
+
+    @Composable
+    private fun Banner(template: BannerTemplate) =
+        BannerContent(template, onDismissRequested = {}, onSubmitted = {}, onOpenFollowUp = {})
+
+    @Test
+    fun sheet_branding() = snap { Sheet(brandedSheet()) }
+
+    @Test
+    fun sheet_branding_dark() = snap(dark = true) { Sheet(brandedSheet()) }
+
+    @Test
+    @Config(fontScale = 2.0f)
+    fun sheet_branding_largeFont() = snap { Sheet(brandedSheet()) }
+
+    @Test
+    fun banner_branding() = snap { Banner(brandedBanner()) }
+
+    @Test
+    fun banner_branding_dark() = snap(dark = true) { Banner(brandedBanner()) }
+
+    @Test
+    @Config(fontScale = 2.0f)
+    fun banner_branding_largeFont() = snap { Banner(brandedBanner()) }
+
+    /** Fixed brand colors; the secondary text is too faint for its background, so the badge falls back to black. */
+    private val themedLowContrast = WhiskrKitTheme(
+        container = WhiskrKitTheme.ContainerTheme(
+            sheet = WhiskrKitTheme.OverlayTheme(backgroundColor = Color(0xFFFFF3E0)),
+            banner = WhiskrKitTheme.BannerTheme(backgroundColor = Color(0xFFFFF3E0)),
+        ),
+        button = WhiskrKitTheme.ButtonTheme(
+            primary = WhiskrKitTheme.ButtonAppearance.Variant(
+                WhiskrKitTheme.ButtonVariant(backgroundColor = Color(0xFFE8590C), textColor = Color.White),
+            ),
+        ),
+        title = WhiskrKitTheme.TextTheme(color = Color(0xFF3E2723)),
+        subtitle = WhiskrKitTheme.TextTheme(color = Color(0xFFD7B899)),
+        headline = WhiskrKitTheme.TextTheme(color = Color(0xFF3E2723)),
+        subheadline = WhiskrKitTheme.TextTheme(color = Color(0xFFD7B899)),
+    )
+
+    @Test
+    fun sheet_branding_themedLowContrast() = snap(theme = themedLowContrast) { Sheet(brandedSheet()) }
+
+    @Test
+    fun banner_branding_themedLowContrast() = snap(theme = themedLowContrast) { Banner(brandedBanner()) }
+
+    @Test
+    fun banner_branding_followUpButtons_noBadge() = snap {
+        Banner(brandedBanner().copy(survey = null, followUpIdentifier = "next"))
+    }
+
+    // endregion
 }
