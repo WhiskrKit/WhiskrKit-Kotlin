@@ -35,6 +35,7 @@ internal data class SheetTemplate(
     val followUpQuestion: String? = null,
     val survey: QuestionTemplate,
     override val language: String? = null,
+    val branding: Branding? = null,
     @EncodeDefault(EncodeDefault.Mode.ALWAYS) val template: String = "sheet",
 ) : SurveyTemplate
 
@@ -59,6 +60,7 @@ internal data class BannerTemplate(
     val followUpIdentifier: String? = null,
     val survey: QuestionTemplate? = null,
     override val language: String? = null,
+    val branding: Branding? = null,
     @EncodeDefault(EncodeDefault.Mode.ALWAYS) val template: String = "toast",
 ) : SurveyTemplate
 
