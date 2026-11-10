@@ -2,6 +2,7 @@ package eu.whiskrkit.core
 
 import eu.whiskrkit.core.eligibility.EligibilityService
 import eu.whiskrkit.core.model.BannerTemplate
+import eu.whiskrkit.core.model.Branding
 import eu.whiskrkit.core.model.FullScreenFormTemplate
 import eu.whiskrkit.core.model.MultipleChoiceOption
 import eu.whiskrkit.core.model.MultipleChoiceTemplate
@@ -26,6 +27,10 @@ internal class MockConfigurationService : ConfigurationService {
 
     private val templates: Map<String, SurveyTemplate> = buildTemplates()
 
+    /** Whether the mocked sheets and banners ask for the "Powered by WhiskrKit" badge. */
+    @Volatile
+    var brandingVisible: Boolean = false
+
     override fun configure(apiKey: String) {
         // Mock service doesn't need real API configuration.
     }
@@ -36,7 +41,11 @@ internal class MockConfigurationService : ConfigurationService {
 
     override suspend fun fetchSurveyTemplate(identifier: String): SurveyTemplate? {
         delay(500) // Simulate network delay.
-        return templates[identifier]
+        return when (val template = templates[identifier]) {
+            is SheetTemplate -> template.copy(branding = Branding(brandingVisible))
+            is BannerTemplate -> template.copy(branding = Branding(brandingVisible))
+            else -> template
+        }
     }
 
     override suspend fun submitSurveyResponse(surveyId: String, response: SurveyResponse): Boolean {
