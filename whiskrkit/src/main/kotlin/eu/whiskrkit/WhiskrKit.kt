@@ -1,9 +1,11 @@
 package eu.whiskrkit
 
+import android.app.Application
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.net.ConnectivityManager
 import android.net.Network
+import android.os.Build
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -26,6 +28,9 @@ import eu.whiskrkit.core.model.SurveyTemplate
 import eu.whiskrkit.core.network.NetworkService
 import eu.whiskrkit.core.queue.SharedPrefsSubmissionStorage
 import eu.whiskrkit.core.queue.SubmissionQueue
+import eu.whiskrkit.core.review.ResumedActivityTracker
+import eu.whiskrkit.core.review.SharedPrefsStoreReviewStorage
+import eu.whiskrkit.core.review.StoreReviewCoordinator
 import eu.whiskrkit.internal.DeviceInfo
 import eu.whiskrkit.internal.WhiskrLog
 import kotlinx.coroutines.CoroutineScope
@@ -54,6 +59,10 @@ public object WhiskrKit {
     internal var configurationService: ConfigurationService? = null
     internal var eligibilityService: EligibilityService? = null
     internal var eligibilityStorage: EligibilityStorage? = null
+    internal var storeReview: StoreReviewCoordinator? = null
+
+    /** The resumed activity, for the store review prompt. Registered once per process. */
+    internal val activityTracker = ResumedActivityTracker()
 
     /**
      * The imperative trigger channel observed by the host: a StateFlow with
@@ -89,6 +98,36 @@ public object WhiskrKit {
         apiKey: String,
         withMockedSurveys: Boolean = false,
     ) {
+        initializeSdk(context, apiKey, withMockedSurveys, reviewRequester = null)
+    }
+
+    /**
+     * Initializes WhiskrKit and enables the store review follow-up.
+     *
+     * After a survey is submitted successfully with 4 or 5 stars on a star
+     * question that has the store review follow-up switched on in the
+     * dashboard, WhiskrKit dismisses the survey and asks [reviewRequester] for
+     * the review prompt, at most once per app version. For Google Play, add
+     * `eu.whiskrkit:whiskrkit-android-review` and pass `PlayReviewRequester()`.
+     * In mock mode the request is only logged.
+     *
+     * @see initialize
+     */
+    public fun initialize(
+        context: Context,
+        apiKey: String,
+        withMockedSurveys: Boolean = false,
+        reviewRequester: ReviewRequester,
+    ) {
+        initializeSdk(context, apiKey, withMockedSurveys, reviewRequester)
+    }
+
+    private fun initializeSdk(
+        context: Context,
+        apiKey: String,
+        withMockedSurveys: Boolean,
+        reviewRequester: ReviewRequester?,
+    ) {
         val appContext = context.applicationContext
         autoCheckedIdentifiers.clear()
         debugLogging = (appContext.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
@@ -112,6 +151,15 @@ public object WhiskrKit {
             eligibilityService = WhiskrKitEligibilityService(networkService, storage, deviceInfo)
             eligibilityStorage = storage
         }
+
+        storeReview = StoreReviewCoordinator(
+            storage = if (withMockedSurveys) null else SharedPrefsStoreReviewStorage(appContext),
+            appVersion = appVersion(appContext),
+            requester = reviewRequester,
+            currentActivity = { activityTracker.current },
+            scope = scope,
+            mockMode = withMockedSurveys,
+        )
 
         registerLifecycleObservers(appContext)
     }
@@ -251,14 +299,24 @@ public object WhiskrKit {
         return service.fetchSurveyTemplate(identifier)
     }
 
-    internal suspend fun submitSurveyResponse(surveyId: String, response: SurveyResponse) {
+    /**
+     * Submits a response. Called right at the submit tap. Only a submission the
+     * backend accepted counts: then the completion is tracked and the store review
+     * follow-up may run. A failed submission that was queued for retry does neither.
+     */
+    internal suspend fun submitSurveyResponse(template: SurveyTemplate, response: SurveyResponse) {
         val service = configurationService ?: run {
             WhiskrLog.e(WhiskrLog.CORE, "WhiskrKit is not initialized. Call initialize() first.")
             return
         }
-        val success = service.submitSurveyResponse(surveyId, withAttributes(response))
+        // Launched at the submit tap, so this is when the survey was dismissed.
+        val submitTappedAt = storeReview?.now()
+        val success = service.submitSurveyResponse(template.id, withAttributes(response))
         if (success) {
-            trackSurveyCompletion(surveyId)
+            trackSurveyCompletion(template.id)
+            if (submitTappedAt != null) {
+                storeReview?.onSubmissionSucceeded(template, response, submitTappedAt)
+            }
         }
     }
 
@@ -301,9 +359,26 @@ public object WhiskrKit {
         scope.launch { service.recordImpression(surveyId, event, trigger) }
     }
 
+    /** `versionName (versionCode)` of the host app; the store review is asked once per value. */
+    private fun appVersion(appContext: Context): String = runCatching {
+        val info = appContext.packageManager.getPackageInfo(appContext.packageName, 0)
+        val code = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            info.longVersionCode
+        } else {
+            @Suppress("DEPRECATION")
+            info.versionCode.toLong()
+        }
+        "${info.versionName} ($code)"
+    }.getOrElse {
+        WhiskrLog.w(WhiskrLog.CORE, "Could not read the app version", it)
+        "unknown"
+    }
+
     private fun registerLifecycleObservers(appContext: Context) {
         if (lifecycleObserversRegistered) return
         lifecycleObserversRegistered = true
+
+        (appContext as? Application)?.registerActivityLifecycleCallbacks(activityTracker)
 
         // Session = app came to foreground; also retries queued submissions.
         ProcessLifecycleOwner.get().lifecycle.addObserver(

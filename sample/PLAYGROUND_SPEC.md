@@ -113,7 +113,7 @@ icon, `group`.
 | Group | Name | Mock id | Presentation | Content |
 |---|---|---|---|---|
 | Question types | Scale rating | `onboarding-survey` | sheet | Title "Welcome aboard!", description "Help us understand your needs better", follow-up question "What could we do better?". Scale rating "How likely are you to recommend us?", range 1–8, required. |
-| Question types | Symbol rating | `feature-feedback` | sheet | Title "New Feature Feedback", description "What do you think of our latest update?". Five-star rating "Rate your experience", optional. |
+| Question types | Symbol rating | `feature-feedback` | sheet | Title "New Feature Feedback", description "What do you think of our latest update?". Five-star rating "Rate your experience", optional, with the store review follow-up on (`opensStoreReview`): submitting 4 or 5 stars logs that a review would have been requested; mock mode never shows the store prompt. |
 | Question types | Thumbs rating | `checkout-survey` | sheet | Title "How was your checkout?", description "We'd love to hear your thoughts". Thumbs up/down, optional. |
 | Question types | Text feedback | `ask-survey` | sheet | Title "What would you ask us?". Free text "Tell us more", max 200 characters, required. |
 | Question types | Multiple choice | `choice-survey` | sheet | Title "You recently visited the Avatar", follow-up question "What did you like most?". Multi-select "What element is your strength?" with Water, Fire, Earth, Air; required. |
@@ -430,6 +430,9 @@ Check each item in the other SDK before building its playground.
 ### SDK (section 11)
 
 1. Mocked surveys flag: `WhiskrKit.initialize(context, apiKey, withMockedSurveys = true)`.
+   The Android playground also passes `reviewRequester = PlayReviewRequester()`
+   (from `whiskrkit-android-review`) to show the wiring; in mock mode it is never
+   called, and a qualifying `feature-feedback` rating only logs.
 2. Mock ids: `feature-feedback`, `checkout-survey`, `ask-survey` and `super-survey`
    were added with the iOS content. `onboarding-survey`, `choice-survey` and
    `welcome-toast` were aligned with iOS. The Android-only mock ids

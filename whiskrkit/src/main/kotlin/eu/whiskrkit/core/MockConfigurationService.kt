@@ -110,6 +110,8 @@ internal class MockConfigurationService : ConfigurationService {
                 id = "sheet-6-symbol",
                 title = "Rate your experience",
                 description = "Tap the stars to rate",
+                // Tries the store review follow-up: 4 or 5 stars logs the request.
+                opensStoreReview = true,
                 isRequired = false,
             ),
         ),

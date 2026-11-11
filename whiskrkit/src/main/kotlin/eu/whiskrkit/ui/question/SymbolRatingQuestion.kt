@@ -25,8 +25,9 @@ private const val STAR_COUNT = 5
 private val StarYellow = Color(0xFFFFC107)
 
 /**
- * Five-star rating. `opensStoreReview` is decoded but intentionally ignored;
- * Play In-App Review support is planned as a separate optional artifact.
+ * Five-star rating. When `opensStoreReview` is on, a successful submission with
+ * 4 or 5 stars asks for the store review afterwards (see `StoreReviewCoordinator`);
+ * the question itself looks and behaves the same.
  */
 @Composable
 internal fun SymbolRatingQuestion(
