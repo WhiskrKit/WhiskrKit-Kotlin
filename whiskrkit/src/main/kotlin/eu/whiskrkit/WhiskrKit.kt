@@ -300,19 +300,23 @@ public object WhiskrKit {
     }
 
     /**
-     * Submits a response. Only a submission the backend accepted counts: then the
-     * completion is tracked and the store review follow-up may run. A failed
-     * submission that was queued for retry does neither.
+     * Submits a response. Called right at the submit tap. Only a submission the
+     * backend accepted counts: then the completion is tracked and the store review
+     * follow-up may run. A failed submission that was queued for retry does neither.
      */
     internal suspend fun submitSurveyResponse(template: SurveyTemplate, response: SurveyResponse) {
         val service = configurationService ?: run {
             WhiskrLog.e(WhiskrLog.CORE, "WhiskrKit is not initialized. Call initialize() first.")
             return
         }
+        // Launched at the submit tap, so this is when the survey was dismissed.
+        val submitTappedAt = storeReview?.now()
         val success = service.submitSurveyResponse(template.id, withAttributes(response))
         if (success) {
             trackSurveyCompletion(template.id)
-            storeReview?.onSubmissionSucceeded(template, response)
+            if (submitTappedAt != null) {
+                storeReview?.onSubmissionSucceeded(template, response, submitTappedAt)
+            }
         }
     }
 

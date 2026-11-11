@@ -20,6 +20,8 @@ import eu.whiskrkit.core.model.TextSurveyTemplate
 import eu.whiskrkit.core.model.ThumbsRating
 import eu.whiskrkit.core.model.ThumbsSurveyTemplate
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -50,9 +52,15 @@ private class InMemoryStoreReviewStorage : StoreReviewStorage {
     override var lastRequestedVersion: String? = null
 }
 
-private class ResultConfigurationService(private val result: Boolean) : ConfigurationService {
+private class ResultConfigurationService(
+    private val result: Boolean,
+    private val latencyMillis: Long = 0,
+) : ConfigurationService {
     override suspend fun fetchSurveyTemplate(identifier: String): SurveyTemplate? = null
-    override suspend fun submitSurveyResponse(surveyId: String, response: SurveyResponse): Boolean = result
+    override suspend fun submitSurveyResponse(surveyId: String, response: SurveyResponse): Boolean {
+        delay(latencyMillis)
+        return result
+    }
     override suspend fun recordImpression(surveyId: String, event: SurveyImpressionEvent, trigger: SurveyImpressionTrigger) = Unit
     override suspend fun retryPendingSubmissions() = Unit
     override fun configure(apiKey: String) = Unit
@@ -86,7 +94,11 @@ class StoreReviewCoordinatorTest {
         currentActivity = currentActivity,
         scope = scope,
         mockMode = mockMode,
+        clock = { testScheduler.currentTime },
     )
+
+    /** Submitted right now, as if the backend answered instantly. */
+    private fun TestScope.submittedNow() = testScheduler.currentTime
 
     @After
     fun tearDown() {
@@ -98,7 +110,7 @@ class StoreReviewCoordinatorTest {
     fun `fires for 4 and 5 stars`() = runTest {
         for (score in listOf(4, 5)) {
             storage.lastRequestedVersion = null
-            coordinator().onSubmissionSucceeded(sheet(), stars(score))
+            coordinator().onSubmissionSucceeded(sheet(), stars(score), submittedNow())
             advanceUntilIdle()
         }
         assertEquals(listOf(activity, activity), requester.calls)
@@ -107,7 +119,7 @@ class StoreReviewCoordinatorTest {
     @Test
     fun `does not fire for 1 to 3 stars`() = runTest {
         for (score in 1..3) {
-            coordinator().onSubmissionSucceeded(sheet(), stars(score))
+            coordinator().onSubmissionSucceeded(sheet(), stars(score), submittedNow())
         }
         advanceUntilIdle()
         assertTrue(requester.calls.isEmpty())
@@ -116,21 +128,21 @@ class StoreReviewCoordinatorTest {
 
     @Test
     fun `does not fire when the question has the follow-up off`() = runTest {
-        coordinator().onSubmissionSucceeded(sheet(star(opensStoreReview = false)), stars(5))
+        coordinator().onSubmissionSucceeded(sheet(star(opensStoreReview = false)), stars(5), submittedNow())
         advanceUntilIdle()
         assertTrue(requester.calls.isEmpty())
     }
 
     @Test
     fun `does not fire when the question was skipped`() = runTest {
-        coordinator().onSubmissionSucceeded(sheet(), SurveyResponse())
+        coordinator().onSubmissionSucceeded(sheet(), SurveyResponse(), submittedNow())
         advanceUntilIdle()
         assertTrue(requester.calls.isEmpty())
     }
 
     @Test
     fun `waits for the delay after dismissal before asking`() = runTest {
-        coordinator().onSubmissionSucceeded(sheet(), stars(5))
+        coordinator().onSubmissionSucceeded(sheet(), stars(5), submittedNow())
         advanceTimeBy(STORE_REVIEW_DELAY_MILLIS - 1)
         runCurrent()
         assertTrue(requester.calls.isEmpty())
@@ -142,13 +154,13 @@ class StoreReviewCoordinatorTest {
     @Test
     fun `fires once per app version and again after a version change`() = runTest {
         repeat(3) {
-            coordinator(appVersion = "1.0 (1)").onSubmissionSucceeded(sheet(), stars(5))
+            coordinator(appVersion = "1.0 (1)").onSubmissionSucceeded(sheet(), stars(5), submittedNow())
             advanceUntilIdle()
         }
         assertEquals(1, requester.calls.size)
         assertEquals("1.0 (1)", storage.lastRequestedVersion)
 
-        coordinator(appVersion = "1.1 (2)").onSubmissionSucceeded(sheet(), stars(5))
+        coordinator(appVersion = "1.1 (2)").onSubmissionSucceeded(sheet(), stars(5), submittedNow())
         advanceUntilIdle()
         assertEquals(2, requester.calls.size)
         assertEquals("1.1 (2)", storage.lastRequestedVersion)
@@ -157,15 +169,15 @@ class StoreReviewCoordinatorTest {
     @Test
     fun `two qualifying submissions during the delay ask once`() = runTest {
         val coordinator = coordinator()
-        coordinator.onSubmissionSucceeded(sheet(), stars(5))
-        coordinator.onSubmissionSucceeded(sheet(), stars(4))
+        coordinator.onSubmissionSucceeded(sheet(), stars(5), submittedNow())
+        coordinator.onSubmissionSucceeded(sheet(), stars(4), submittedNow())
         advanceUntilIdle()
         assertEquals(1, requester.calls.size)
     }
 
     @Test
     fun `mock mode never calls the requester`() = runTest {
-        coordinator(mockMode = true).onSubmissionSucceeded(sheet(), stars(5))
+        coordinator(mockMode = true).onSubmissionSucceeded(sheet(), stars(5), submittedNow())
         advanceUntilIdle()
         assertTrue(requester.calls.isEmpty())
     }
@@ -179,14 +191,15 @@ class StoreReviewCoordinatorTest {
             currentActivity = { activity },
             scope = this,
             mockMode = false,
-        ).onSubmissionSucceeded(sheet(), stars(5))
+            clock = { testScheduler.currentTime },
+        ).onSubmissionSucceeded(sheet(), stars(5), submittedNow())
         advanceUntilIdle()
         assertNull(storage.lastRequestedVersion)
     }
 
     @Test
     fun `skips without a resumed activity and tries again next time`() = runTest {
-        coordinator(currentActivity = { null }).onSubmissionSucceeded(sheet(), stars(5))
+        coordinator(currentActivity = { null }).onSubmissionSucceeded(sheet(), stars(5), submittedNow())
         advanceUntilIdle()
         assertTrue(requester.calls.isEmpty())
         assertNull(storage.lastRequestedVersion)
@@ -195,21 +208,21 @@ class StoreReviewCoordinatorTest {
     @Test
     fun `a failing requester is caught`() = runTest {
         requester.error = IllegalStateException("Play not available")
-        coordinator().onSubmissionSucceeded(sheet(), stars(5))
+        coordinator().onSubmissionSucceeded(sheet(), stars(5), submittedNow())
         advanceUntilIdle()
         assertEquals(1, requester.calls.size)
     }
 
     @Test
     fun `banner with a qualifying star question fires`() = runTest {
-        coordinator().onSubmissionSucceeded(BannerTemplate(id = "banner", survey = star()), stars(4))
+        coordinator().onSubmissionSucceeded(BannerTemplate(id = "banner", survey = star()), stars(4), submittedNow())
         advanceUntilIdle()
         assertEquals(1, requester.calls.size)
     }
 
     @Test
     fun `banner without a question does not fire`() = runTest {
-        coordinator().onSubmissionSucceeded(BannerTemplate(id = "banner"), SurveyResponse())
+        coordinator().onSubmissionSucceeded(BannerTemplate(id = "banner"), SurveyResponse(), submittedNow())
         advanceUntilIdle()
         assertTrue(requester.calls.isEmpty())
     }
@@ -241,7 +254,7 @@ class StoreReviewCoordinatorTest {
             ),
         )
 
-        coordinator().onSubmissionSucceeded(form, response)
+        coordinator().onSubmissionSucceeded(form, response, submittedNow())
         advanceUntilIdle()
         assertEquals(1, requester.calls.size)
     }
@@ -259,7 +272,7 @@ class StoreReviewCoordinatorTest {
             ),
         )
 
-        coordinator().onSubmissionSucceeded(form, response)
+        coordinator().onSubmissionSucceeded(form, response, submittedNow())
         advanceUntilIdle()
         assertTrue(requester.calls.isEmpty())
     }
@@ -285,6 +298,73 @@ class StoreReviewCoordinatorTest {
 
         assertTrue(requester.calls.isEmpty())
         assertNull(storage.lastRequestedVersion)
+    }
+
+    @Test
+    fun `the delay counts from the submit tap, not from the server answer`() = runTest {
+        val tappedAt = testScheduler.currentTime
+        advanceTimeBy(500) // The submission took 500 ms.
+        runCurrent()
+
+        coordinator().onSubmissionSucceeded(sheet(), stars(5), submitTappedAt = tappedAt)
+        advanceTimeBy(STORE_REVIEW_DELAY_MILLIS - 500 - 1)
+        runCurrent()
+        assertTrue(requester.calls.isEmpty())
+        advanceTimeBy(2)
+        runCurrent()
+        assertEquals(1, requester.calls.size)
+    }
+
+    @Test
+    fun `a submission slower than the delay asks right away`() = runTest {
+        val tappedAt = testScheduler.currentTime
+        advanceTimeBy(3_000)
+        runCurrent()
+
+        coordinator().onSubmissionSucceeded(sheet(), stars(5), submitTappedAt = tappedAt)
+        runCurrent()
+        assertEquals(1, requester.calls.size)
+    }
+
+    @Test
+    fun `a submission slower than 10 seconds skips and leaves the version unused`() = runTest {
+        val tappedAt = testScheduler.currentTime
+        advanceTimeBy(STORE_REVIEW_MAX_SUBMIT_MILLIS + 1)
+        runCurrent()
+
+        coordinator().onSubmissionSucceeded(sheet(), stars(5), submitTappedAt = tappedAt)
+        advanceUntilIdle()
+
+        assertTrue(requester.calls.isEmpty())
+        assertNull(storage.lastRequestedVersion)
+    }
+
+    @Test
+    fun `a slow submission through WhiskrKit skips the review`() = runTest {
+        WhiskrKit.configurationService =
+            ResultConfigurationService(result = true, latencyMillis = STORE_REVIEW_MAX_SUBMIT_MILLIS + 500)
+        WhiskrKit.storeReview = coordinator()
+
+        launch { WhiskrKit.submitSurveyResponse(sheet(), stars(5)) }
+        advanceUntilIdle()
+
+        assertTrue(requester.calls.isEmpty())
+        assertNull(storage.lastRequestedVersion)
+    }
+
+    @Test
+    fun `a submission through WhiskrKit asks the delay after the tap`() = runTest {
+        WhiskrKit.configurationService = ResultConfigurationService(result = true, latencyMillis = 400)
+        WhiskrKit.storeReview = coordinator()
+
+        launch { WhiskrKit.submitSurveyResponse(sheet(), stars(5)) }
+        advanceTimeBy(STORE_REVIEW_DELAY_MILLIS - 1)
+        runCurrent()
+        assertTrue(requester.calls.isEmpty())
+        advanceTimeBy(2)
+        runCurrent()
+        assertEquals(1, requester.calls.size)
+        assertEquals("1.0 (1)", storage.lastRequestedVersion)
     }
 
     @Test
