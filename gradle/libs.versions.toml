@@ -4,8 +4,9 @@ kotlin = "2.3.10"
 # Compose versions are pinned explicitly (no BOM): platform() constraints don't
 # reach the published api variant / POM entries, leaving consumers that resolve
 # the compile classpath with versionless deps ("Could not find
-# androidx.compose.runtime:runtime:"). These match compose-bom 2026.04.01.
-compose = "1.11.0"
+# androidx.compose.runtime:runtime:"). Kept on 1.10.x: nothing in the SDK needs
+# 1.11, and a newer pin would force apps still on Compose 1.10 to upgrade.
+compose = "1.10.6"
 composeMaterial3 = "1.4.0"
 # Frozen at 1.7.x upstream; used by the sample app only.
 composeMaterialIcons = "1.7.8"
