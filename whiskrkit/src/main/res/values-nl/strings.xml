@@ -8,6 +8,7 @@
     <string name="whiskrkit_thumbs_up">Ja</string>
     <string name="whiskrkit_thumbs_down">Nee</string>
     <string name="whiskrkit_survey">Enquête</string>
+    <string name="whiskrkit_powered_by">Mogelijk gemaakt door %1$s</string>
 
     <string name="whiskrkit_required_scale">Geef een beoordeling van %1$d tot %2$d</string>
     <string name="whiskrkit_required_thumbs">Kies een van de opties</string>

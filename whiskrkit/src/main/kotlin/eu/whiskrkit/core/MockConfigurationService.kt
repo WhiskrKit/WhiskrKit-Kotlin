@@ -2,6 +2,7 @@ package eu.whiskrkit.core
 
 import eu.whiskrkit.core.eligibility.EligibilityService
 import eu.whiskrkit.core.model.BannerTemplate
+import eu.whiskrkit.core.model.Branding
 import eu.whiskrkit.core.model.FullScreenFormTemplate
 import eu.whiskrkit.core.model.MultipleChoiceOption
 import eu.whiskrkit.core.model.MultipleChoiceTemplate
@@ -36,7 +37,11 @@ internal class MockConfigurationService : ConfigurationService {
 
     override suspend fun fetchSurveyTemplate(identifier: String): SurveyTemplate? {
         delay(500) // Simulate network delay.
-        return templates[identifier]
+        return when (val template = templates[identifier]) {
+            is SheetTemplate -> template.copy(branding = MOCK_BRANDING)
+            is BannerTemplate -> template.copy(branding = MOCK_BRANDING)
+            else -> template
+        }
     }
 
     override suspend fun submitSurveyResponse(surveyId: String, response: SurveyResponse): Boolean {
@@ -53,6 +58,9 @@ internal class MockConfigurationService : ConfigurationService {
             "Mock: '${event.name.lowercase()}' (${trigger.name.lowercase()}) impression for surveyId=$surveyId",
         )
     }
+
+    /** Mocked sheets and banners always ask for the badge, so it can be previewed. */
+    private val MOCK_BRANDING = Branding(visible = true)
 
     private fun buildTemplates(): Map<String, SurveyTemplate> = mapOf(
         // Banner ("toast" on the wire) templates

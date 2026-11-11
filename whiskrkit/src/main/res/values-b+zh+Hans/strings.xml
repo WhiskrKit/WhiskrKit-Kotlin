@@ -8,6 +8,7 @@
     <string name="whiskrkit_thumbs_up">是</string>
     <string name="whiskrkit_thumbs_down">否</string>
     <string name="whiskrkit_survey">问卷调查</string>
+    <string name="whiskrkit_powered_by">技术支持：%1$s</string>
 
     <string name="whiskrkit_required_scale">请选择 %1$d 到 %2$d 之间的评分</string>
     <string name="whiskrkit_required_thumbs">请选择其中一个选项</string>

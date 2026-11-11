@@ -30,6 +30,7 @@ import eu.whiskrkit.WhiskrKit
 import eu.whiskrkit.core.model.SheetTemplate
 import eu.whiskrkit.core.model.SurveyResponse
 import eu.whiskrkit.core.model.TextSurveyTemplate
+import eu.whiskrkit.core.model.isVisible
 import eu.whiskrkit.ui.WhiskrIcons
 import eu.whiskrkit.internal.WhiskrLog
 import eu.whiskrkit.theme.LocalWhiskrKitTheme
@@ -178,6 +179,13 @@ internal fun SheetContent(
             kind = WhiskrButtonKind.Primary,
             modifier = Modifier.fillMaxWidth(),
         )
+        if (template.branding.isVisible) {
+            PoweredByBadge(
+                textColor = theme.subtitle.color,
+                fontFamily = theme.subtitle.textStyle.fontFamily,
+                background = theme.sheetBackground,
+            )
+        }
     }
 }
 

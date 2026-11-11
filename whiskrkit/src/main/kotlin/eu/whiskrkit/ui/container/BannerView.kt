@@ -40,6 +40,7 @@ import eu.whiskrkit.R
 import eu.whiskrkit.WhiskrKit
 import eu.whiskrkit.core.model.BannerTemplate
 import eu.whiskrkit.core.model.SurveyResponse
+import eu.whiskrkit.core.model.isVisible
 import eu.whiskrkit.ui.WhiskrIcons
 import eu.whiskrkit.internal.WhiskrLog
 import eu.whiskrkit.theme.LocalWhiskrKitTheme
@@ -199,6 +200,13 @@ internal fun BannerContent(
                     compact = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
+                if (template.branding.isVisible) {
+                    PoweredByBadge(
+                        textColor = theme.subheadline.color,
+                fontFamily = theme.subheadline.textStyle.fontFamily,
+                        background = theme.bannerBackground,
+                    )
+                }
             } else {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),

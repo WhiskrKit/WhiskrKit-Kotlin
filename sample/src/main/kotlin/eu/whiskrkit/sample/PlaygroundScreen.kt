@@ -118,7 +118,13 @@ private fun LazyListScope.surveySections() {
             )
         }
     }
-    item { SectionFooter("Surveys are mocked: responses and events are never sent to WhiskrKit.") }
+    item {
+        SectionFooter(
+            "Surveys are mocked: responses and events are never sent to WhiskrKit. " +
+                "Sheets and banners always show the \"Powered by WhiskrKit\" badge, so you can " +
+                "preview it in both styles and themes.",
+        )
+    }
 }
 
 private fun LazyListScope.presetSection(settings: ThemeSettings) {

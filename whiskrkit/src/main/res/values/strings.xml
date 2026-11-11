@@ -8,6 +8,7 @@
     <string name="whiskrkit_thumbs_up">Yes</string>
     <string name="whiskrkit_thumbs_down">No</string>
     <string name="whiskrkit_survey">Survey</string>
+    <string name="whiskrkit_powered_by">Powered by %1$s</string>
 
     <string name="whiskrkit_required_scale">Select a rating between %1$d and %2$d</string>
     <string name="whiskrkit_required_thumbs">Select one of the options</string>

@@ -8,6 +8,7 @@
     <string name="whiskrkit_thumbs_up">はい</string>
     <string name="whiskrkit_thumbs_down">いいえ</string>
     <string name="whiskrkit_survey">アンケート</string>
+    <string name="whiskrkit_powered_by">%1$s 提供</string>
 
     <string name="whiskrkit_required_scale">%1$d〜%2$dの評価を選んでください</string>
     <string name="whiskrkit_required_thumbs">いずれかを選んでください</string>
