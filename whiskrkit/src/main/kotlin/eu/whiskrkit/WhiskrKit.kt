@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.net.ConnectivityManager
 import android.net.Network
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -68,6 +70,37 @@ public object WhiskrKit {
     /** True when the host app is debuggable; gates the personal-data hints. */
     @Volatile
     internal var debugLogging: Boolean = false
+
+    @Volatile
+    private var surveyCompletedListener: SurveyCompletionListener? = null
+
+    /**
+     * Sets a listener that is called on the main thread each time the user submits
+     * a survey, with the survey id and the answers given. It fires as soon as the
+     * user submits, whether or not the response reaches the server (a failed
+     * submission is queued and retried), and never when a survey is dismissed
+     * without submitting. Also called in mock mode. Pass `null` to remove it.
+     *
+     * ```kotlin
+     * WhiskrKit.setOnSurveyCompletedListener { completion ->
+     *     analytics.log("survey_completed", completion.surveyId)
+     * }
+     * ```
+     */
+    public fun setOnSurveyCompletedListener(listener: SurveyCompletionListener?) {
+        surveyCompletedListener = listener
+    }
+
+    /** Calls the completion listener on the main thread. */
+    private fun notifySurveyCompleted(surveyId: String, response: SurveyResponse) {
+        val listener = surveyCompletedListener ?: return
+        val completion = SurveyCompletion.from(surveyId, response)
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            listener.onSurveyCompleted(completion)
+        } else {
+            Handler(Looper.getMainLooper()).post { listener.onSurveyCompleted(completion) }
+        }
+    }
 
     internal val autoCheckedIdentifiers: MutableSet<String> = mutableSetOf()
 
@@ -256,6 +289,8 @@ public object WhiskrKit {
             WhiskrLog.e(WhiskrLog.CORE, "WhiskrKit is not initialized. Call initialize() first.")
             return
         }
+        // The user has submitted: report it now, independent of the network result.
+        notifySurveyCompleted(surveyId, response)
         val success = service.submitSurveyResponse(surveyId, withAttributes(response))
         if (success) {
             trackSurveyCompletion(surveyId)

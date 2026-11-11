@@ -8,9 +8,13 @@ Add a line under **Unreleased** in each pull request. When releasing, rename
 
 ## Unreleased
 
-## 0.2.0 - 2026-11-10
+## 0.2.0 - 2026-11-11
 
 ### Added
+- `WhiskrKit.setOnSurveyCompletedListener`: called on the main thread when the
+  user submits a survey, with the survey id and the submitted answers (question
+  id, question type and value). It fires whether or not the response reaches the
+  server, and not when a survey is dismissed without submitting.
 - A small "Powered by WhiskrKit" badge below the submit button of sheets and
   banners, shown only when the server asks for it (`branding.visible`). A missing
   or malformed `branding` hides it and never affects the survey. The badge uses

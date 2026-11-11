@@ -6,6 +6,102 @@ public final class eu/whiskrkit/BuildConfig {
 	public fun <init> ()V
 }
 
+public final class eu/whiskrkit/SurveyCompletion {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;)Leu/whiskrkit/SurveyCompletion;
+	public static synthetic fun copy$default (Leu/whiskrkit/SurveyCompletion;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Leu/whiskrkit/SurveyCompletion;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAnswers ()Ljava/util/List;
+	public final fun getSurveyId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class eu/whiskrkit/SurveyCompletion$Answer {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Leu/whiskrkit/SurveyCompletion$QuestionType;Leu/whiskrkit/SurveyCompletion$Value;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Leu/whiskrkit/SurveyCompletion$QuestionType;
+	public final fun component3 ()Leu/whiskrkit/SurveyCompletion$Value;
+	public final fun copy (Ljava/lang/String;Leu/whiskrkit/SurveyCompletion$QuestionType;Leu/whiskrkit/SurveyCompletion$Value;)Leu/whiskrkit/SurveyCompletion$Answer;
+	public static synthetic fun copy$default (Leu/whiskrkit/SurveyCompletion$Answer;Ljava/lang/String;Leu/whiskrkit/SurveyCompletion$QuestionType;Leu/whiskrkit/SurveyCompletion$Value;ILjava/lang/Object;)Leu/whiskrkit/SurveyCompletion$Answer;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getQuestionId ()Ljava/lang/String;
+	public final fun getQuestionType ()Leu/whiskrkit/SurveyCompletion$QuestionType;
+	public final fun getValue ()Leu/whiskrkit/SurveyCompletion$Value;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class eu/whiskrkit/SurveyCompletion$QuestionType : java/lang/Enum {
+	public static final field MULTIPLE_CHOICE Leu/whiskrkit/SurveyCompletion$QuestionType;
+	public static final field SCALE_RATING Leu/whiskrkit/SurveyCompletion$QuestionType;
+	public static final field SYMBOL_RATING Leu/whiskrkit/SurveyCompletion$QuestionType;
+	public static final field TEXTUAL_SURVEY Leu/whiskrkit/SurveyCompletion$QuestionType;
+	public static final field THUMBS_RATING Leu/whiskrkit/SurveyCompletion$QuestionType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Leu/whiskrkit/SurveyCompletion$QuestionType;
+	public static fun values ()[Leu/whiskrkit/SurveyCompletion$QuestionType;
+}
+
+public abstract interface class eu/whiskrkit/SurveyCompletion$Value {
+}
+
+public final class eu/whiskrkit/SurveyCompletion$Value$Choices : eu/whiskrkit/SurveyCompletion$Value {
+	public static final field $stable I
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Leu/whiskrkit/SurveyCompletion$Value$Choices;
+	public static synthetic fun copy$default (Leu/whiskrkit/SurveyCompletion$Value$Choices;Ljava/util/List;ILjava/lang/Object;)Leu/whiskrkit/SurveyCompletion$Value$Choices;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOptionIds ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class eu/whiskrkit/SurveyCompletion$Value$Score : eu/whiskrkit/SurveyCompletion$Value {
+	public static final field $stable I
+	public fun <init> (I)V
+	public final fun component1 ()I
+	public final fun copy (I)Leu/whiskrkit/SurveyCompletion$Value$Score;
+	public static synthetic fun copy$default (Leu/whiskrkit/SurveyCompletion$Value$Score;IILjava/lang/Object;)Leu/whiskrkit/SurveyCompletion$Value$Score;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getScore ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class eu/whiskrkit/SurveyCompletion$Value$Text : eu/whiskrkit/SurveyCompletion$Value {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Leu/whiskrkit/SurveyCompletion$Value$Text;
+	public static synthetic fun copy$default (Leu/whiskrkit/SurveyCompletion$Value$Text;Ljava/lang/String;ILjava/lang/Object;)Leu/whiskrkit/SurveyCompletion$Value$Text;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class eu/whiskrkit/SurveyCompletion$Value$Thumbs : eu/whiskrkit/SurveyCompletion$Value {
+	public static final field $stable I
+	public fun <init> (Z)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Leu/whiskrkit/SurveyCompletion$Value$Thumbs;
+	public static synthetic fun copy$default (Leu/whiskrkit/SurveyCompletion$Value$Thumbs;ZILjava/lang/Object;)Leu/whiskrkit/SurveyCompletion$Value$Thumbs;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun isUp ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class eu/whiskrkit/SurveyCompletionListener {
+	public abstract fun onSurveyCompleted (Leu/whiskrkit/SurveyCompletion;)V
+}
+
 public final class eu/whiskrkit/WhiskrKit {
 	public static final field $stable I
 	public static final field INSTANCE Leu/whiskrkit/WhiskrKit;
@@ -21,6 +117,7 @@ public final class eu/whiskrkit/WhiskrKit {
 	public final fun setAttribute (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun setAttribute (Ljava/lang/String;Z)V
 	public final fun setAttributes (Ljava/util/Map;)V
+	public final fun setOnSurveyCompletedListener (Leu/whiskrkit/SurveyCompletionListener;)V
 }
 
 public final class eu/whiskrkit/theme/WhiskrKitTheme {

@@ -126,6 +126,30 @@ characters, 2 KB in total. The SDK trims anything beyond that.
 > `phone`, `name` or `address` are dropped too. In debug builds the SDK logs a
 > warning when an attribute looks like personal data.
 
+## Survey completion
+
+Set a listener to hear when the user submits a survey, for example to log it in
+your own analytics or to move on in a flow:
+
+```kotlin
+WhiskrKit.setOnSurveyCompletedListener { completion ->
+    analytics.log("survey_completed", completion.surveyId)
+    completion.answers.forEach { answer ->
+        Log.d("Survey", "${answer.questionId} ${answer.questionType} ${answer.value}")
+    }
+}
+```
+
+`SurveyCompletion` holds the survey id and the submitted answers, each with its
+question id, question type (`SCALE_RATING`, `SYMBOL_RATING`, `THUMBS_RATING`,
+`TEXTUAL_SURVEY` or `MULTIPLE_CHOICE`) and value (`Value.Score`, `Value.Thumbs`,
+`Value.Text` or `Value.Choices`). Questions left unanswered are not included.
+
+The listener is called on the main thread as soon as the user submits, whether or
+not the response reaches the server (a failed submission is queued and retried).
+It is not called when a survey is dismissed without submitting, and it is also
+called in mock mode. Pass `null` to remove it.
+
 ## Theming
 
 Out of the box, surveys match your Material 3 theme — colors, typography, dark
