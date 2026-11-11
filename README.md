@@ -101,8 +101,10 @@ Button(onClick = { WhiskrKit.present(surveyId = "your-survey-id") }) {
 
 ## Survey attributes
 
-Attach context about the user to every response, for example their plan, to
-segment results in the dashboard. Values are a string, number or boolean:
+Attach context about the user or session to every survey response submitted
+afterwards, such as the user's plan or an experiment variant. They're stored
+with each response; see [Attributes](https://whiskrkit.eu/docs/attributes/) for what to send and what
+not. Values are a string, number or boolean:
 
 ```kotlin
 WhiskrKit.setAttribute("plan", "pro")
@@ -124,7 +126,8 @@ characters, 2 KB in total. The SDK trims anything beyond that.
 > **Do not send personal data.** Emails, phone numbers, names, IBANs and card
 > numbers are dropped by the server, and attributes with keys such as `email`,
 > `phone`, `name` or `address` are dropped too. In debug builds the SDK logs a
-> warning when an attribute looks like personal data.
+> warning when an attribute looks like personal data. See
+> [Privacy](https://whiskrkit.eu/docs/attributes/#privacy).
 
 ## Survey completion
 

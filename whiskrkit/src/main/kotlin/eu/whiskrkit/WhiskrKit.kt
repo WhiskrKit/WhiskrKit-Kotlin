@@ -177,8 +177,9 @@ public object WhiskrKit {
 
     /**
      * Sets a global attribute sent with every survey response, for example the
-     * user's plan, to segment results in the dashboard. Attributes live in memory
-     * only, so set them again at launch. Safe to call from any thread.
+     * user's plan or an experiment variant; it is stored with each response.
+     * Attributes live in memory only, so set them again at launch. Safe to call
+     * from any thread. See https://whiskrkit.eu/docs/attributes/.
      *
      * Do not send personal data (emails, phone numbers, names, IBANs, card
      * numbers). The server drops it.
