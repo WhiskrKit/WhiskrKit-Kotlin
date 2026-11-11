@@ -36,6 +36,11 @@ Add a line under **Unreleased** in each pull request. When releasing, rename
   app's language as before.
 
 ### Changed
+- The minimum Android version is now 7.0 (API 24, was 26). The SDK no longer
+  uses `java.time` internally; the public API, the wire format and stored data
+  are unchanged.
+- The SDK needs Jetpack Compose 1.10 instead of 1.11, so apps on Compose 1.10
+  no longer have to upgrade.
 - The star rating's TalkBack labels and its required message use plural
   forms ("1 star", "5 stars") in every language.
 - Removed the unused strings `whiskrkit_a11y_score`, `whiskrkit_a11y_x_out_of_y`

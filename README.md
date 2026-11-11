@@ -19,8 +19,8 @@ backend and share the same survey templates.
 
 ## Requirements
 
-* minSdk 26 (Android 8.0)
-* Jetpack Compose (Material 3)
+* minSdk 24 (Android 7.0)
+* Jetpack Compose 1.10 or later (Material 3)
 
 ## Installation
 
@@ -213,7 +213,7 @@ described in [sample/PLAYGROUND_SPEC.md](sample/PLAYGROUND_SPEC.md).
 
 ## Platform compatibility
 
-* Android 8.0+ (API 26+)
+* Android 7.0+ (API 24+)
 
 ## License
 

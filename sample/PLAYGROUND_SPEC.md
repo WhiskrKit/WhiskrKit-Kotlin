@@ -413,7 +413,7 @@ Check each item in the other SDK before building its playground.
   playground replaces its content. CI, the minified release build that checks the
   SDK's consumer R8 rules, and the README link stay as they were.
 - It depends on the SDK with `implementation(project(":whiskrkit"))`.
-- Built with Jetpack Compose and Material 3, min SDK 26.
+- Built with Jetpack Compose and Material 3, min SDK 24.
 - CI: the `build` job in `.github/workflows/ci.yml` runs
   `:sample:testDebugUnitTest` and builds `:sample:assembleRelease`.
 
