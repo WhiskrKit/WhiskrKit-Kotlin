@@ -11,7 +11,7 @@ import eu.whiskrkit.core.network.SurveyApi
 import eu.whiskrkit.core.network.WhiskrKitException
 import eu.whiskrkit.core.queue.PendingSubmission
 import eu.whiskrkit.core.queue.SubmissionStorage
-import java.time.Instant
+import eu.whiskrkit.internal.Timestamp
 
 internal class FakeSurveyApi : SurveyApi {
     var fetchResult: SurveyTemplate? = null
@@ -74,16 +74,16 @@ internal class FakeSubmissionStorage : SubmissionStorage {
 internal class FakeEligibilityStorage : EligibilityStorage {
     override var deviceId: String = "test-device"
     override var sessionCount: Int = 3
-    override var installDate: Instant = Instant.parse("2026-01-01T00:00:00Z")
-    override var lastSurveyDate: Instant? = null
-    override var completedSurveys: Map<String, Instant> = emptyMap()
-    override var seenSurveys: Map<String, Instant> = emptyMap()
+    override var installDate: Timestamp = Timestamp.parse("2026-01-01T00:00:00Z")
+    override var lastSurveyDate: Timestamp? = null
+    override var completedSurveys: Map<String, Timestamp> = emptyMap()
+    override var seenSurveys: Map<String, Timestamp> = emptyMap()
 
-    private val nextChecks = mutableMapOf<String, Instant>()
+    private val nextChecks = mutableMapOf<String, Timestamp>()
 
-    override fun nextCheckAfter(surveyId: String): Instant? = nextChecks[surveyId]
+    override fun nextCheckAfter(surveyId: String): Timestamp? = nextChecks[surveyId]
 
-    override fun setNextCheckAfter(date: Instant?, surveyId: String) {
+    override fun setNextCheckAfter(date: Timestamp?, surveyId: String) {
         if (date == null) nextChecks.remove(surveyId) else nextChecks[surveyId] = date
     }
 

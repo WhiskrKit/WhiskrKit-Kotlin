@@ -2,12 +2,12 @@ package eu.whiskrkit.core.eligibility
 
 import android.content.Context
 import android.content.SharedPreferences
-import eu.whiskrkit.core.serialization.IsoInstantSerializer
+import eu.whiskrkit.internal.IsoTimestampSerializer
 import eu.whiskrkit.core.serialization.WireJson
 import eu.whiskrkit.internal.WhiskrLog
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.serializer
-import java.time.Instant
+import eu.whiskrkit.internal.Timestamp
 import java.util.UUID
 
 /**
@@ -18,15 +18,15 @@ import java.util.UUID
 internal interface EligibilityStorage {
     val deviceId: String
     val sessionCount: Int
-    val installDate: Instant
-    var lastSurveyDate: Instant?
-    var completedSurveys: Map<String, Instant>
+    val installDate: Timestamp
+    var lastSurveyDate: Timestamp?
+    var completedSurveys: Map<String, Timestamp>
 
     /** Surveys that have been put on screen, whatever the outcome. */
-    var seenSurveys: Map<String, Instant>
+    var seenSurveys: Map<String, Timestamp>
 
-    fun nextCheckAfter(surveyId: String): Instant?
-    fun setNextCheckAfter(date: Instant?, surveyId: String)
+    fun nextCheckAfter(surveyId: String): Timestamp?
+    fun setNextCheckAfter(date: Timestamp?, surveyId: String)
     fun removeCompletedSurvey(surveyId: String)
     fun removeSeenSurvey(surveyId: String)
     fun incrementSessionCount()
@@ -60,52 +60,52 @@ internal class SharedPrefsEligibilityStorage(
     override val sessionCount: Int
         get() = prefs.getInt(Keys.SESSION_COUNT, 0)
 
-    override val installDate: Instant
+    override val installDate: Timestamp
         get() = prefs.getLong(Keys.INSTALL_DATE, -1L)
             .takeIf { it >= 0 }
-            ?.let(Instant::ofEpochMilli)
-            ?: Instant.now()
+            ?.let(::Timestamp)
+            ?: Timestamp.now()
 
-    override var lastSurveyDate: Instant?
+    override var lastSurveyDate: Timestamp?
         get() = prefs.getLong(Keys.LAST_SURVEY_DATE, -1L)
             .takeIf { it >= 0 }
-            ?.let(Instant::ofEpochMilli)
+            ?.let(::Timestamp)
         set(value) {
             prefs.edit().apply {
                 if (value == null) remove(Keys.LAST_SURVEY_DATE)
-                else putLong(Keys.LAST_SURVEY_DATE, value.toEpochMilli())
+                else putLong(Keys.LAST_SURVEY_DATE, value.epochMillis)
             }.apply()
         }
 
-    override var completedSurveys: Map<String, Instant>
+    override var completedSurveys: Map<String, Timestamp>
         get() = dateMap(Keys.COMPLETED_SURVEYS)
         set(value) = setDateMap(Keys.COMPLETED_SURVEYS, value)
 
-    override var seenSurveys: Map<String, Instant>
+    override var seenSurveys: Map<String, Timestamp>
         get() = dateMap(Keys.SEEN_SURVEYS)
         set(value) = setDateMap(Keys.SEEN_SURVEYS, value)
 
-    private fun dateMap(key: String): Map<String, Instant> {
+    private fun dateMap(key: String): Map<String, Timestamp> {
         val raw = prefs.getString(key, null) ?: return emptyMap()
         return runCatching {
             WireJson.decodeFromString(dateMapSerializer, raw)
         }.getOrDefault(emptyMap())
     }
 
-    private fun setDateMap(key: String, value: Map<String, Instant>) {
+    private fun setDateMap(key: String, value: Map<String, Timestamp>) {
         val raw = WireJson.encodeToString(dateMapSerializer, value)
         prefs.edit().putString(key, raw).apply()
     }
 
-    override fun nextCheckAfter(surveyId: String): Instant? =
+    override fun nextCheckAfter(surveyId: String): Timestamp? =
         prefs.getLong(Keys.nextCheckAfter(surveyId), -1L)
             .takeIf { it >= 0 }
-            ?.let(Instant::ofEpochMilli)
+            ?.let(::Timestamp)
 
-    override fun setNextCheckAfter(date: Instant?, surveyId: String) {
+    override fun setNextCheckAfter(date: Timestamp?, surveyId: String) {
         prefs.edit().apply {
             if (date == null) remove(Keys.nextCheckAfter(surveyId))
-            else putLong(Keys.nextCheckAfter(surveyId), date.toEpochMilli())
+            else putLong(Keys.nextCheckAfter(surveyId), date.epochMillis)
         }.apply()
     }
 
@@ -130,7 +130,7 @@ internal class SharedPrefsEligibilityStorage(
             WhiskrLog.i(WhiskrLog.CORE, "Generated new device ID")
         }
         if (!prefs.contains(Keys.INSTALL_DATE)) {
-            prefs.edit().putLong(Keys.INSTALL_DATE, Instant.now().toEpochMilli()).apply()
+            prefs.edit().putLong(Keys.INSTALL_DATE, System.currentTimeMillis()).apply()
             WhiskrLog.i(WhiskrLog.CORE, "Install date set for the first time")
         }
     }
@@ -139,6 +139,6 @@ internal class SharedPrefsEligibilityStorage(
         const val PREFS_FILE = "eu.whiskrkit"
 
         val dateMapSerializer =
-            MapSerializer(String.serializer(), IsoInstantSerializer)
+            MapSerializer(String.serializer(), IsoTimestampSerializer)
     }
 }

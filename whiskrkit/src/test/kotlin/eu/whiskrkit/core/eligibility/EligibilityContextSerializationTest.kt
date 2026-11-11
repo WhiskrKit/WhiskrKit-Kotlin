@@ -3,7 +3,7 @@ package eu.whiskrkit.core.eligibility
 import eu.whiskrkit.core.serialization.WireJson
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.time.Instant
+import eu.whiskrkit.internal.Timestamp
 
 /**
  * Pins the `/eligible` request body byte-for-byte against the iOS SDK. The two
@@ -19,10 +19,10 @@ class EligibilityContextSerializationTest {
             appVersion = "1.0.0",
             locale = "en-US",
             sessionCount = 3,
-            installDate = Instant.ofEpochSecond(1_700_000_000),
-            lastSurveyDate = Instant.ofEpochSecond(1_705_000_000),
-            completedSurveys = mapOf("checkout-feedback" to Instant.ofEpochSecond(1_704_000_000)),
-            seenSurveys = mapOf("your-journey-stats" to Instant.ofEpochSecond(1_706_000_000)),
+            installDate = Timestamp.ofEpochSecond(1_700_000_000),
+            lastSurveyDate = Timestamp.ofEpochSecond(1_705_000_000),
+            completedSurveys = mapOf("checkout-feedback" to Timestamp.ofEpochSecond(1_704_000_000)),
+            seenSurveys = mapOf("your-journey-stats" to Timestamp.ofEpochSecond(1_706_000_000)),
         )
 
         val json = WireJson.encodeToString(SurveyEligibilityContext.serializer(), context)
@@ -44,7 +44,7 @@ class EligibilityContextSerializationTest {
             appVersion = "1.0.0",
             locale = "en-US",
             sessionCount = 1,
-            installDate = Instant.ofEpochSecond(1_700_000_000),
+            installDate = Timestamp.ofEpochSecond(1_700_000_000),
             lastSurveyDate = null,
             completedSurveys = emptyMap(),
             seenSurveys = emptyMap(),

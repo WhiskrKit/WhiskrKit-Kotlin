@@ -9,13 +9,12 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.time.Instant
-import java.time.temporal.ChronoUnit
+import eu.whiskrkit.internal.Timestamp
 
 class SubmissionQueueTest {
 
-    private val baseTime: Instant = Instant.parse("2026-06-11T12:00:00Z")
-    private var currentTime: Instant = baseTime
+    private val baseTime: Timestamp = Timestamp.parse("2026-06-11T12:00:00Z")
+    private var currentTime: Timestamp = baseTime
     private val storage = FakeSubmissionStorage()
     private val queue = SubmissionQueue(storage) { currentTime }
 
@@ -23,7 +22,7 @@ class SubmissionQueueTest {
         surveyId = surveyId,
         response = SurveyResponse(mapOf("q" to SurveyAnswer.NpsRating(5))),
         timestamp = currentTime,
-        expiresAt = currentTime.plus(7, ChronoUnit.DAYS),
+        expiresAt = currentTime.plusDays(7),
     )
 
     @Test
@@ -65,7 +64,7 @@ class SubmissionQueueTest {
     @Test
     fun `expired submissions are cleaned up on read`() {
         queue.enqueue(submission())
-        currentTime = baseTime.plus(8, ChronoUnit.DAYS)
+        currentTime = baseTime.plusDays(8)
         assertTrue(queue.retryableSubmissions().isEmpty())
         assertEquals(0, queue.count)
     }
@@ -103,7 +102,7 @@ class SubmissionQueueTest {
     @Test
     fun `queue drops expired submissions on construction`() {
         storage.stored = listOf(submission("old"))
-        currentTime = baseTime.plus(8, ChronoUnit.DAYS)
+        currentTime = baseTime.plusDays(8)
         val fresh = SubmissionQueue(storage) { currentTime }
         assertEquals(0, fresh.count)
     }
@@ -136,7 +135,7 @@ class SubmissionQueueTest {
             results = mapOf("q" to SurveyAnswer.NpsRating(5)),
             attributes = mapOf("plan" to AttributeValue.Text("free")),
         )
-        val pending = PendingSubmission(surveyId = "survey-1", response = response, timestamp = currentTime, expiresAt = currentTime.plus(7, ChronoUnit.DAYS))
+        val pending = PendingSubmission(surveyId = "survey-1", response = response, timestamp = currentTime, expiresAt = currentTime.plusDays(7))
         queue.enqueue(pending)
 
         val reloaded = SubmissionQueue(storage) { currentTime }

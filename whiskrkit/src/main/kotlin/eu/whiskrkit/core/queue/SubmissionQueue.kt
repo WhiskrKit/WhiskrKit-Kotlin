@@ -1,6 +1,6 @@
 package eu.whiskrkit.core.queue
 
-import java.time.Instant
+import eu.whiskrkit.internal.Timestamp
 
 /**
  * In-memory queue with persistent backing. Not thread-safe by design: all
@@ -8,7 +8,7 @@ import java.time.Instant
  */
 internal class SubmissionQueue(
     private val storage: SubmissionStorage,
-    private val now: () -> Instant = Instant::now,
+    private val now: () -> Timestamp = { Timestamp.now() },
 ) {
     private var submissions: MutableList<PendingSubmission> = mutableListOf()
 

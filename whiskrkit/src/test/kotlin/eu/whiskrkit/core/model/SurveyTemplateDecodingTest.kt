@@ -8,7 +8,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.time.Instant
+import eu.whiskrkit.internal.Timestamp
 
 class SurveyTemplateDecodingTest {
 
@@ -169,7 +169,7 @@ class SurveyTemplateDecodingTest {
             """.trimIndent(),
         )
         assertTrue(response.shouldShow)
-        assertEquals(Instant.parse("2026-07-01T10:00:00Z"), response.nextCheckAfter)
+        assertEquals(Timestamp.parse("2026-07-01T10:00:00Z"), response.nextCheckAfter)
         assertTrue(response.survey is BannerTemplate)
         assertNull(response.removeFromHistory)
     }

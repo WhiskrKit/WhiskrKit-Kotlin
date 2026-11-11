@@ -9,12 +9,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.time.Instant
-import java.time.temporal.ChronoUnit
+import eu.whiskrkit.internal.Timestamp
 
 class SubmissionRetryCoordinatorTest {
 
-    private var currentTime: Instant = Instant.parse("2026-06-11T12:00:00Z")
+    private var currentTime: Timestamp = Timestamp.parse("2026-06-11T12:00:00Z")
     private val api = FakeSurveyApi()
     private val queue = SubmissionQueue(FakeSubmissionStorage()) { currentTime }
     private val coordinator = SubmissionRetryCoordinator(queue, api)
@@ -24,7 +23,7 @@ class SubmissionRetryCoordinatorTest {
             surveyId = surveyId,
             response = SurveyResponse(mapOf("q" to SurveyAnswer.NpsRating(5))),
             timestamp = currentTime,
-            expiresAt = currentTime.plus(7, ChronoUnit.DAYS),
+            expiresAt = currentTime.plusDays(7),
         )
         queue.enqueue(submission)
         return submission

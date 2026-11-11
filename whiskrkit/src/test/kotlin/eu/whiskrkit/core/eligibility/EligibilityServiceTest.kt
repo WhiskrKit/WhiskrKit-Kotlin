@@ -15,13 +15,13 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
-import java.time.Instant
+import eu.whiskrkit.internal.Timestamp
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 class EligibilityServiceTest {
 
-    private val now: Instant = Instant.parse("2026-06-11T12:00:00Z")
+    private val now: Timestamp = Timestamp.parse("2026-06-11T12:00:00Z")
     private val api = FakeSurveyApi()
     private val storage = FakeEligibilityStorage()
     private val context: Context = RuntimeEnvironment.getApplication()

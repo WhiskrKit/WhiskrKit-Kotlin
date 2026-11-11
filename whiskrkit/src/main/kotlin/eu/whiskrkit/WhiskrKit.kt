@@ -36,7 +36,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import java.time.Instant
+import eu.whiskrkit.internal.Timestamp
 
 /**
  * Entry point of the WhiskrKit SDK.
@@ -314,7 +314,7 @@ public object WhiskrKit {
 
     private fun trackSurveyCompletion(surveyId: String) {
         val storage = eligibilityStorage ?: return
-        storage.completedSurveys = storage.completedSurveys + (surveyId to Instant.now())
+        storage.completedSurveys = storage.completedSurveys + (surveyId to Timestamp.now())
         storage.setNextCheckAfter(null, surveyId)
         WhiskrLog.i(WhiskrLog.CORE, "Tracked completion for survey '$surveyId'")
     }
@@ -326,7 +326,7 @@ public object WhiskrKit {
      */
     internal fun trackSurveySeen(surveyId: String) {
         val storage = eligibilityStorage ?: return
-        storage.seenSurveys = storage.seenSurveys + (surveyId to Instant.now())
+        storage.seenSurveys = storage.seenSurveys + (surveyId to Timestamp.now())
         WhiskrLog.i(WhiskrLog.CORE, "Tracked impression for survey '$surveyId'")
     }
 

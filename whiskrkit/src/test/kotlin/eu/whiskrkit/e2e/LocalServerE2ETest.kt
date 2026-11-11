@@ -23,8 +23,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
-import java.time.Instant
-import java.time.temporal.ChronoUnit
+import eu.whiskrkit.internal.Timestamp
 import java.util.UUID
 
 /**
@@ -90,7 +89,7 @@ class LocalServerE2ETest {
 
         // 2. Survey goes on screen: seen record + shown impression
         //    (what the impression reporter does on display).
-        storage.seenSurveys = storage.seenSurveys + (surveyId to Instant.now())
+        storage.seenSurveys = storage.seenSurveys + (surveyId to Timestamp.now())
         network.recordImpression(surveyId, SurveyImpressionEvent.SHOWN, SurveyImpressionTrigger.TARGETED)
 
         // 3. User dismisses without submitting: dismissed impression, nothing else.
@@ -103,7 +102,7 @@ class LocalServerE2ETest {
 
         val nextCheck = storage.nextCheckAfter(surveyId)
         assertNotNull("server must return a nextCheckAfter for the seen survey", nextCheck)
-        val days = ChronoUnit.HOURS.between(Instant.now(), nextCheck).toDouble() / 24.0
+        val days = (nextCheck!!.epochMillis - Timestamp.now().epochMillis) / 3_600_000L / 24.0
         assertTrue("expected ~30 day cooldown, got $days days", days > 29 && days < 31)
 
         // 5. Third check is suppressed client-side by the cached nextCheckAfter —
@@ -118,7 +117,7 @@ class LocalServerE2ETest {
         assertNotNull(granted)
 
         // Simulate what a successful submit records.
-        storage.completedSurveys = storage.completedSurveys + (surveyId to Instant.now())
+        storage.completedSurveys = storage.completedSurveys + (surveyId to Timestamp.now())
 
         val afterCompletion = service.checkEligibility(surveyId)
         assertNull("completed .once survey must not be granted again", afterCompletion)

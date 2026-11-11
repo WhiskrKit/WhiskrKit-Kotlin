@@ -14,8 +14,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
-import java.time.Instant
-import java.time.temporal.ChronoUnit
+import eu.whiskrkit.internal.Timestamp
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
@@ -49,7 +48,7 @@ class SharedPrefsStorageTest {
     @Test
     fun `completed surveys round-trip with second precision`() {
         val storage = SharedPrefsEligibilityStorage(context)
-        val date = Instant.parse("2026-06-11T12:30:45Z")
+        val date = Timestamp.parse("2026-06-11T12:30:45Z")
         storage.completedSurveys = mapOf("survey-1" to date)
 
         assertEquals(mapOf("survey-1" to date), storage.completedSurveys)
@@ -61,7 +60,7 @@ class SharedPrefsStorageTest {
     @Test
     fun `seen surveys round-trip and clear independently of completions`() {
         val storage = SharedPrefsEligibilityStorage(context)
-        val date = Instant.parse("2026-06-11T12:30:45Z")
+        val date = Timestamp.parse("2026-06-11T12:30:45Z")
         storage.seenSurveys = mapOf("survey-1" to date)
         storage.completedSurveys = mapOf("survey-2" to date)
 
@@ -75,7 +74,7 @@ class SharedPrefsStorageTest {
     @Test
     fun `nextCheckAfter set get and clear`() {
         val storage = SharedPrefsEligibilityStorage(context)
-        val date = Instant.parse("2026-07-01T00:00:00Z")
+        val date = Timestamp.parse("2026-07-01T00:00:00Z")
 
         assertNull(storage.nextCheckAfter("survey-1"))
         storage.setNextCheckAfter(date, "survey-1")
@@ -87,7 +86,7 @@ class SharedPrefsStorageTest {
     @Test
     fun `last survey date persists and clears`() {
         val storage = SharedPrefsEligibilityStorage(context)
-        val date = Instant.parse("2026-06-01T08:00:00Z")
+        val date = Timestamp.parse("2026-06-01T08:00:00Z")
 
         assertNull(storage.lastSurveyDate)
         storage.lastSurveyDate = date
@@ -99,12 +98,12 @@ class SharedPrefsStorageTest {
     @Test
     fun `submission storage round-trips pending submissions`() {
         val storage = SharedPrefsSubmissionStorage(context)
-        val now = Instant.parse("2026-06-11T12:00:00Z")
+        val now = Timestamp.parse("2026-06-11T12:00:00Z")
         val submission = PendingSubmission(
             surveyId = "survey-1",
             response = SurveyResponse(mapOf("q" to SurveyAnswer.Text("hello"))),
             timestamp = now,
-            expiresAt = now.plus(7, ChronoUnit.DAYS),
+            expiresAt = now.plusDays(7),
             retryCount = 2,
             lastRetryAttempt = now.minusSeconds(600),
         )
@@ -136,7 +135,7 @@ class SharedPrefsStorageTest {
     @Test
     fun `pending submission with attributes round-trips through storage`() {
         val storage = SharedPrefsSubmissionStorage(context)
-        val now = Instant.parse("2026-06-11T12:00:00Z")
+        val now = Timestamp.parse("2026-06-11T12:00:00Z")
         val submission = PendingSubmission(
             surveyId = "survey-1",
             response = SurveyResponse(
@@ -148,7 +147,7 @@ class SharedPrefsStorageTest {
                 ),
             ),
             timestamp = now,
-            expiresAt = now.plus(7, ChronoUnit.DAYS),
+            expiresAt = now.plusDays(7),
         )
 
         storage.save(listOf(submission))

@@ -5,7 +5,7 @@ import eu.whiskrkit.core.network.SurveyApi
 import eu.whiskrkit.internal.DeviceInfo
 import eu.whiskrkit.internal.WhiskrLog
 import kotlinx.coroutines.CancellationException
-import java.time.Instant
+import eu.whiskrkit.internal.Timestamp
 
 internal interface EligibilityService {
     suspend fun checkEligibility(surveyId: String): SurveyTemplate?
@@ -20,7 +20,7 @@ internal class WhiskrKitEligibilityService(
     private val api: SurveyApi,
     private val storage: EligibilityStorage,
     private val deviceInfo: DeviceInfo,
-    private val now: () -> Instant = Instant::now,
+    private val now: () -> Timestamp = { Timestamp.now() },
 ) : EligibilityService {
 
     /** Survey IDs for which an eligibility network call is currently in-flight. */

@@ -1,11 +1,9 @@
 package eu.whiskrkit.core.queue
 
 import eu.whiskrkit.core.model.SurveyResponse
-import eu.whiskrkit.core.serialization.IsoInstant
+import eu.whiskrkit.internal.IsoTimestamp
+import eu.whiskrkit.internal.Timestamp
 import kotlinx.serialization.Serializable
-import java.time.Duration
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 internal object SubmissionQueueConfig {
@@ -35,22 +33,22 @@ internal data class PendingSubmission(
     val idempotencyKey: String = UUID.randomUUID().toString(),
     val surveyId: String,
     val response: SurveyResponse,
-    val timestamp: IsoInstant = Instant.now(),
-    val expiresAt: IsoInstant = Instant.now().plus(SubmissionQueueConfig.EXPIRATION_DAYS, ChronoUnit.DAYS),
+    val timestamp: IsoTimestamp = Timestamp.now(),
+    val expiresAt: IsoTimestamp = Timestamp.now().plusDays(SubmissionQueueConfig.EXPIRATION_DAYS),
     val retryCount: Int = 0,
-    val lastRetryAttempt: IsoInstant? = null,
+    val lastRetryAttempt: IsoTimestamp? = null,
 ) {
-    fun isExpired(now: Instant): Boolean = now.isAfter(expiresAt)
+    fun isExpired(now: Timestamp): Boolean = now.isAfter(expiresAt)
 
-    fun shouldRetry(now: Instant): Boolean =
+    fun shouldRetry(now: Timestamp): Boolean =
         !isExpired(now) && retryCount < SubmissionQueueConfig.MAX_RETRIES
 
-    fun canRetryNow(now: Instant): Boolean {
+    fun canRetryNow(now: Timestamp): Boolean {
         if (!shouldRetry(now)) return false
         val lastRetry = lastRetryAttempt ?: return true
-        return Duration.between(lastRetry, now).seconds >= SubmissionQueueConfig.RETRY_THROTTLE_SECONDS
+        return now.secondsSince(lastRetry) >= SubmissionQueueConfig.RETRY_THROTTLE_SECONDS
     }
 
-    fun withRetryAttempt(now: Instant): PendingSubmission =
+    fun withRetryAttempt(now: Timestamp): PendingSubmission =
         copy(retryCount = retryCount + 1, lastRetryAttempt = now)
 }
