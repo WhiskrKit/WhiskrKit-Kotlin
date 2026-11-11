@@ -148,6 +148,16 @@ WhiskrKit.initialize(
 )
 ```
 
+**Why a separate add-on, passed in by hand?** The prompt uses Google Play's
+in-app review library. Keeping it in its own artifact means the core SDK has no
+Google Play dependency, so apps distributed outside Google Play (for example on
+AppGallery, F-Droid or through enterprise distribution) can use WhiskrKit
+without it. The core library can't reference a class from an artifact it
+doesn't depend on, so the app hands the requester to `initialize`. Without one,
+a qualifying rating is only logged and nothing is shown. You can also implement
+`ReviewRequester` yourself, for example for another app store. On iOS no setup
+is needed, because the review prompt is part of the system (StoreKit).
+
 When it fires:
 
 * Only after the survey was **submitted successfully** (sheet, banner or
@@ -167,10 +177,6 @@ When it fires:
   page instead.
 * With `withMockedSurveys = true` the SDK never calls Google Play; it logs that a
   review would have been requested.
-
-Without the add-on the core library has no Google Play dependency; a qualifying
-rating is then only logged. You can also implement `ReviewRequester` yourself,
-for example for another app store.
 
 ## Theming
 
