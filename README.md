@@ -16,6 +16,7 @@ backend and share the same survey templates.
 * **Offline-safe**: failed submissions queue locally and retry on foreground and when connectivity returns
 * **State restoration**: open surveys and partial answers survive rotation and process death
 * **Accessibility first**: native TalkBack semantics on every component
+* **Play Store review follow-up**: happy raters (4 or 5 stars) get the Google Play in-app review, with the optional `whiskrkit-android-review` add-on
 
 ## Requirements
 
@@ -126,6 +127,51 @@ characters, 2 KB in total. The SDK trims anything beyond that.
 > `phone`, `name` or `address` are dropped too. In debug builds the SDK logs a
 > warning when an attribute looks like personal data.
 
+## Store review follow-up
+
+A star question can ask happy users for a Google Play review. Switch it on per
+star question in the WhiskrKit dashboard, then add the optional add-on and pass
+its requester once at startup:
+
+```kotlin
+dependencies {
+    implementation("eu.whiskrkit:whiskrkit-android:0.2.0")
+    implementation("eu.whiskrkit:whiskrkit-android-review:0.2.0")
+}
+```
+
+```kotlin
+WhiskrKit.initialize(
+    context = this,
+    apiKey = "your-api-key",
+    reviewRequester = PlayReviewRequester(), // eu.whiskrkit.review
+)
+```
+
+When it fires:
+
+* Only after the survey was **submitted successfully** (sheet, banner or
+  full-screen form) and a star question with the follow-up switched on was rated
+  **4 or 5 stars**. Closing the survey without submitting never asks, and
+  neither does a submission that failed and was queued for retry.
+* The survey is dismissed first; the review is requested about 0.75 seconds
+  after the submit tap, on the activity that is on screen. If no activity is
+  resumed by then, or the submission took longer than 10 seconds, it is skipped
+  and asked again after the next qualifying survey.
+* **At most once per app version** (`versionName` and `versionCode`). The
+  version counts as used once Google Play is asked, even when Play shows nothing.
+* **Google Play decides** whether the prompt actually appears: it applies its own
+  quota and doesn't report the outcome. The prompt only works for apps installed
+  from Google Play (internal app sharing or an internal testing track works for
+  testing). If the flow fails, the SDK logs it and never opens the Play Store
+  page instead.
+* With `withMockedSurveys = true` the SDK never calls Google Play; it logs that a
+  review would have been requested.
+
+Without the add-on the core library has no Google Play dependency; a qualifying
+rating is then only logged. You can also implement `ReviewRequester` yourself,
+for example for another app store.
+
 ## Theming
 
 Out of the box, surveys match your Material 3 theme — colors, typography, dark
@@ -181,6 +227,7 @@ described in [sample/PLAYGROUND_SPEC.md](sample/PLAYGROUND_SPEC.md).
 
 ```bash
 ./gradlew :whiskrkit:testDebugUnitTest        # unit tests (incl. architecture rules)
+./gradlew :whiskrkit-review:testDebugUnitTest # Play review add-on tests
 ./gradlew :whiskrkit:verifyRoborazziDebug     # screenshot tests against golden images
 ./gradlew :whiskrkit:recordRoborazziDebug     # re-record golden images
 ./gradlew apiCheck                            # public API compatibility check
