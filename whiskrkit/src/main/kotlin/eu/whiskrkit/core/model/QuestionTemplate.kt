@@ -48,11 +48,6 @@ internal data class SymbolRatingTemplate(
     override val id: String,
     val title: String? = null,
     val description: String? = null,
-    /**
-     * Asks for the store review after a successful submission rated 4 or 5 stars,
-     * at most once per app version. See `StoreReviewCoordinator`.
-     */
-    val opensStoreReview: Boolean = false,
     override val isRequired: Boolean,
     @SerialName("A11yLabel") val a11yLabel: String? = null,
     @SerialName("A11yHint") val a11yHint: String? = null,

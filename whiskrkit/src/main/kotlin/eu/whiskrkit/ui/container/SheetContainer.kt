@@ -105,7 +105,7 @@ internal fun SheetContent(
             WhiskrLog.i(WhiskrLog.UI, "User submitted sheet survey.")
             val submitted = response
             WhiskrKit.scope.launch {
-                WhiskrKit.submitSurveyResponse(template, submitted)
+                WhiskrKit.submitSurveyResponse(template.id, submitted)
             }
             onSubmitted()
         } else {

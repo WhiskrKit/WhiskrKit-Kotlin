@@ -19,7 +19,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Unit tests (incl. architecture rules and the sample's snippet check)
-        run: ./gradlew :whiskrkit:testDebugUnitTest :whiskrkit-review:testDebugUnitTest :sample:testDebugUnitTest
+        run: ./gradlew :whiskrkit:testDebugUnitTest :sample:testDebugUnitTest
 
       - name: Screenshot tests
         run: ./gradlew :whiskrkit:verifyRoborazziDebug
@@ -27,8 +27,8 @@ jobs:
       - name: Public API compatibility
         run: ./gradlew apiCheck
 
-      - name: Assemble libraries and minified sample
-        run: ./gradlew :whiskrkit:assembleRelease :whiskrkit-review:assembleRelease :sample:assembleRelease
+      - name: Assemble library and minified sample
+        run: ./gradlew :whiskrkit:assembleRelease :sample:assembleRelease
 
       - name: Upload screenshot diffs on failure
         if: failure()

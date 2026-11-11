@@ -6,19 +6,13 @@ public final class eu/whiskrkit/BuildConfig {
 	public fun <init> ()V
 }
 
-public abstract interface class eu/whiskrkit/ReviewRequester {
-	public abstract fun requestReview (Landroid/app/Activity;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public final class eu/whiskrkit/WhiskrKit {
 	public static final field $stable I
 	public static final field INSTANCE Leu/whiskrkit/WhiskrKit;
 	public final fun checkAndPresent (Ljava/lang/String;)V
 	public final fun clearAttributes ()V
 	public final fun initialize (Landroid/content/Context;Ljava/lang/String;Z)V
-	public final fun initialize (Landroid/content/Context;Ljava/lang/String;ZLeu/whiskrkit/ReviewRequester;)V
 	public static synthetic fun initialize$default (Leu/whiskrkit/WhiskrKit;Landroid/content/Context;Ljava/lang/String;ZILjava/lang/Object;)V
-	public static synthetic fun initialize$default (Leu/whiskrkit/WhiskrKit;Landroid/content/Context;Ljava/lang/String;ZLeu/whiskrkit/ReviewRequester;ILjava/lang/Object;)V
 	public final fun present (Ljava/lang/String;)V
 	public final fun removeAttribute (Ljava/lang/String;)V
 	public final fun setAttribute (Ljava/lang/String;D)V

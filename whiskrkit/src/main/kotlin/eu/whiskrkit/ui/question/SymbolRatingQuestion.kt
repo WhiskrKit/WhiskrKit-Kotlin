@@ -24,11 +24,7 @@ import eu.whiskrkit.ui.WhiskrIcons
 private const val STAR_COUNT = 5
 private val StarYellow = Color(0xFFFFC107)
 
-/**
- * Five-star rating. When `opensStoreReview` is on, a successful submission with
- * 4 or 5 stars asks for the store review afterwards (see `StoreReviewCoordinator`);
- * the question itself looks and behaves the same.
- */
+/** Five-star rating. */
 @Composable
 internal fun SymbolRatingQuestion(
     template: SymbolRatingTemplate,

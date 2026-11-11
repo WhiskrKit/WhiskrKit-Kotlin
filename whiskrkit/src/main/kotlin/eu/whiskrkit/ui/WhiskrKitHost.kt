@@ -1,23 +1,15 @@
 package eu.whiskrkit.ui
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
 import eu.whiskrkit.WhiskrKit
 import eu.whiskrkit.core.PendingSurveyRequest
 import eu.whiskrkit.core.model.BannerTemplate
@@ -64,44 +56,12 @@ public fun WhiskrKitHost(
     content: @Composable () -> Unit,
 ) {
     val resolvedTheme = resolveWhiskrTheme(theme)
-    TrackHostActivity()
     CompositionLocalProvider(LocalWhiskrKitTheme provides resolvedTheme) {
         Box(modifier = modifier) {
             content()
             SurveyPresenter()
         }
     }
-}
-
-/**
- * Tells the store review's activity tracker about the host's activity. The
- * application-wide callbacks only see activities that resume after
- * [WhiskrKit.initialize]; an app (or a Flutter / React Native wrapper) that
- * initializes later would otherwise have no activity until the next resume.
- * Adding the observer replays ON_RESUME when the activity is already resumed.
- */
-@Composable
-private fun TrackHostActivity() {
-    val activity = LocalContext.current.findActivity() ?: return
-    val lifecycleOwner = activity as? LifecycleOwner ?: return
-    DisposableEffect(activity) {
-        val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_RESUME -> WhiskrKit.activityTracker.onActivityResumed(activity)
-                Lifecycle.Event.ON_PAUSE -> WhiskrKit.activityTracker.onActivityPaused(activity)
-                Lifecycle.Event.ON_DESTROY -> WhiskrKit.activityTracker.onActivityDestroyed(activity)
-                else -> Unit
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
-    }
-}
-
-private tailrec fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
 }
 
 /**

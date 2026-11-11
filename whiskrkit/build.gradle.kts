@@ -7,8 +7,7 @@ plugins {
     alias(libs.plugins.maven.publish)
 }
 
-// Shared with :whiskrkit-review; set in gradle.properties.
-val sdkVersion = providers.gradleProperty("whiskrkitVersion").get()
+val sdkVersion = "0.2.0"
 
 android {
     namespace = "eu.whiskrkit"

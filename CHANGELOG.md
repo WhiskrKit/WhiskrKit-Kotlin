@@ -30,19 +30,6 @@ Add a line under **Unreleased** in each pull request. When releasing, rename
 - WhiskrKit's own strings follow the language a survey was served in when the
   survey response includes a `language` field. Without it, they follow the
   app's language as before.
-- Store review follow-up: a star question with the follow-up switched on in the
-  dashboard (`opensStoreReview`) asks for the Google Play in-app review after the
-  survey was submitted successfully with 4 or 5 stars, at most once per app
-  version, shortly after the survey is dismissed. Closing without submitting or a
-  failed (queued) submission never asks. Google Play decides whether the prompt
-  appears.
-- New optional artifact `eu.whiskrkit:whiskrkit-android-review` with
-  `PlayReviewRequester`, passed as
-  `WhiskrKit.initialize(..., reviewRequester = PlayReviewRequester())`. The core
-  library gains no Google Play dependency; without the add-on a qualifying rating
-  is only logged. Custom stores can implement `ReviewRequester`.
-- Mocked surveys: the `feature-feedback` star survey has the follow-up switched
-  on and logs the review request instead of calling Google Play.
 
 ### Changed
 - The star rating's TalkBack labels and its required message use plural

@@ -121,7 +121,7 @@ internal fun BannerContent(
             WhiskrLog.i(WhiskrLog.UI, "User submitted survey in banner.")
             val submitted = response
             WhiskrKit.scope.launch {
-                WhiskrKit.submitSurveyResponse(template, submitted)
+                WhiskrKit.submitSurveyResponse(template.id, submitted)
             }
             onSubmitted()
         } else {

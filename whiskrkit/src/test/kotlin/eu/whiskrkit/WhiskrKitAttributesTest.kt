@@ -2,8 +2,6 @@ package eu.whiskrkit
 
 import eu.whiskrkit.core.AttributeValue
 import eu.whiskrkit.core.ConfigurationService
-import eu.whiskrkit.core.model.ScaleRatingTemplate
-import eu.whiskrkit.core.model.SheetTemplate
 import eu.whiskrkit.core.model.SurveyAnswer
 import eu.whiskrkit.core.model.SurveyImpressionEvent
 import eu.whiskrkit.core.model.SurveyImpressionTrigger
@@ -37,10 +35,6 @@ class WhiskrKitAttributesTest {
 
     private val service = CapturingConfigurationService()
     private val answers = mapOf("q1" to SurveyAnswer.NpsRating(9))
-    private val template = SheetTemplate(
-        id = "s1",
-        survey = ScaleRatingTemplate(id = "q1", ratingRange = ScaleRatingTemplate.RatingRange(0, 10), isRequired = true),
-    )
 
     @Before
     fun setUp() {
@@ -54,7 +48,7 @@ class WhiskrKitAttributesTest {
         WhiskrKit.configurationService = null
     }
 
-    private suspend fun submit() = WhiskrKit.submitSurveyResponse(template, SurveyResponse(answers))
+    private suspend fun submit() = WhiskrKit.submitSurveyResponse("s1", SurveyResponse(answers))
 
     @Test
     fun `submission carries the global attributes of every type`() = runTest {
@@ -102,7 +96,7 @@ class WhiskrKitAttributesTest {
         WhiskrKit.setAttribute("plan", "pro")
         WhiskrKit.removeAttribute("legacy")
 
-        WhiskrKit.submitSurveyResponse(template, inFlight)
+        WhiskrKit.submitSurveyResponse("s1", inFlight)
 
         assertEquals(mapOf("plan" to AttributeValue.Text("pro")), service.responses.single().attributes)
     }

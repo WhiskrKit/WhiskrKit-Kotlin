@@ -1,5 +1,0 @@
-public final class eu/whiskrkit/review/PlayReviewRequester : eu/whiskrkit/ReviewRequester {
-	public fun <init> ()V
-	public fun requestReview (Landroid/app/Activity;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-

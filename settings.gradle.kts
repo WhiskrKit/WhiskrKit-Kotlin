@@ -23,5 +23,4 @@ dependencyResolutionManagement {
 rootProject.name = "whiskrkit-android"
 
 include(":whiskrkit")
-include(":whiskrkit-review")
 include(":sample")
