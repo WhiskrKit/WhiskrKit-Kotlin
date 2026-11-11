@@ -97,7 +97,7 @@ internal fun FullScreenContent(
             WhiskrLog.i(WhiskrLog.UI, "User submitted fullscreen survey.")
             val submitted = response
             WhiskrKit.scope.launch {
-                WhiskrKit.submitSurveyResponse(template.id, submitted)
+                WhiskrKit.submitSurveyResponse(template, submitted)
             }
             onSubmitted()
         } else {
