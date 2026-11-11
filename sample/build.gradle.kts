@@ -42,6 +42,7 @@ kotlin {
 
 dependencies {
     implementation(project(":whiskrkit"))
+    implementation(project(":whiskrkit-review"))
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons.core)
     implementation(libs.activity.compose)
