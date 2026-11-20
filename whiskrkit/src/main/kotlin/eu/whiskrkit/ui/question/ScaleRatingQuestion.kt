@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,7 +60,9 @@ internal fun ScaleRatingQuestion(
 ) {
     val selectedScore = (answer as? SurveyAnswer.ScaleRating)?.score
     val resources = LocalResources.current
-    val (minLabel, maxLabel) = ScaleRatingLabels.endLabels(template, resources)
+    // Resolved once per template and language, not on every recomposition or per button.
+    val (minLabel, maxLabel) = remember(template, resources) { ScaleRatingLabels.endLabels(template, resources) }
+    val endsDescription = remember(template, resources) { ScaleRatingLabels.endsDescription(template, resources) }
 
     QuestionContainer(
         title = template.title,
@@ -69,11 +72,11 @@ internal fun ScaleRatingQuestion(
     ) {
         Column {
             when (template.resolvedDisplayStyle) {
-                RatingDisplayStyle.NUMBERS -> ScoreButtonGrid(template, selectedScore, onAnswer)
+                RatingDisplayStyle.NUMBERS -> ScoreButtonGrid(template, selectedScore, endsDescription, onAnswer)
                 RatingDisplayStyle.STARS -> StarRatingRow(
                     rating = selectedScore ?: 0,
                     onSelect = { star -> onAnswer(if (star == selectedScore) null else SurveyAnswer.ScaleRating(star)) },
-                    extraDescription = ScaleRatingLabels.endsDescription(template, resources),
+                    extraDescription = endsDescription,
                     fillWidth = true,
                 )
             }
@@ -102,6 +105,7 @@ internal fun ScaleRatingQuestion(
 private fun ScoreButtonGrid(
     template: ScaleRatingTemplate,
     selectedScore: Int?,
+    endsDescription: String?,
     onAnswer: (SurveyAnswer?) -> Unit,
 ) {
     val fontScale = LocalDensity.current.fontScale
@@ -120,6 +124,7 @@ private fun ScoreButtonGrid(
                             score = score,
                             template = template,
                             isSelected = selectedScore == score,
+                            endsDescription = endsDescription,
                             size = buttonSize,
                             onClick = { isSelected ->
                                 onAnswer(if (isSelected) null else SurveyAnswer.ScaleRating(score))
@@ -137,6 +142,7 @@ private fun ScoreButton(
     score: Int,
     template: ScaleRatingTemplate,
     isSelected: Boolean,
+    endsDescription: String?,
     size: Dp,
     onClick: (isSelected: Boolean) -> Unit,
 ) {
@@ -145,7 +151,7 @@ private fun ScoreButton(
     val resources = LocalResources.current
     val selectedLabel = stringResource(R.string.whiskrkit_a11y_selected)
     val notSelectedLabel = stringResource(R.string.whiskrkit_a11y_not_selected)
-    val description = ScaleRatingLabels.buttonDescription(score, template, resources)
+    val description = ScaleRatingLabels.buttonDescription(score, template, resources, endsDescription)
     val scale by animateFloatAsState(targetValue = if (isSelected) 1.1f else 1f, label = "scoreScale")
     val shape = RoundedCornerShape(8.dp)
     // Black or white, whichever the survey's text color is closest to, so the outline

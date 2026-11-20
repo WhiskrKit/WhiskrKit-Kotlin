@@ -120,10 +120,21 @@ internal object ScaleRatingLabels {
     }
 
     /** What TalkBack reads for one score button: "8 out of 10", then what the end labels mean. */
-    fun buttonDescription(score: Int, template: ScaleRatingTemplate, resources: Resources): String {
+    fun buttonDescription(score: Int, template: ScaleRatingTemplate, resources: Resources): String =
+        buttonDescription(score, template, resources, endsDescription(template, resources))
+
+    /**
+     * [buttonDescription] with the [endsDescription] already resolved, so a grid of
+     * buttons resolves the end labels only once.
+     */
+    fun buttonDescription(
+        score: Int,
+        template: ScaleRatingTemplate,
+        resources: Resources,
+        endsDescription: String?,
+    ): String {
         val position = resources.getString(R.string.whiskrkit_a11y_scale_position, score, template.ratingRange.max)
-        val ends = endsDescription(template, resources) ?: return position
-        return "$position. $ends"
+        return if (endsDescription == null) position else "$position. $endsDescription"
     }
 
     private fun String?.nonBlank(): String? = this?.trim()?.takeIf { it.isNotEmpty() }

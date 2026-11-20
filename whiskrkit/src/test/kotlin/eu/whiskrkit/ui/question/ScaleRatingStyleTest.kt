@@ -1,5 +1,6 @@
 package eu.whiskrkit.ui.question
 
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import eu.whiskrkit.core.model.RatingMetric
 import eu.whiskrkit.core.model.ScaleRatingTemplate
@@ -169,5 +170,25 @@ class ScaleRatingStyleTest {
             ScaleRatingLabels.buttonDescription(3, template(RatingMetric.CUSTOM, csat, maxLabel = "Packed"), resources()),
         )
         assertEquals("3 out of 5", ScaleRatingLabels.buttonDescription(3, template(RatingMetric.CUSTOM, csat), resources()))
+    }
+
+    @Test
+    fun `a description built from resolved ends matches the one-call form`() {
+        val nps = template(RatingMetric.NPS)
+        val ends = ScaleRatingLabels.endsDescription(nps, resources())
+        for (score in 0..10) {
+            assertEquals(
+                ScaleRatingLabels.buttonDescription(score, nps, resources()),
+                ScaleRatingLabels.buttonDescription(score, nps, resources(), ends),
+            )
+        }
+    }
+
+    @Test
+    fun `an unlimited width allows the maximum per row`() {
+        assertEquals(
+            ScaleRatingLayout.MAX_BUTTONS_PER_ROW,
+            ScaleRatingLayout.buttonsPerRow(Dp.Infinity, ScaleRatingLayout.MinimumButtonSize),
+        )
     }
 }
