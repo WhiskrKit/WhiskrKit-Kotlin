@@ -35,6 +35,9 @@ Add a line under **Unreleased** in each pull request. When releasing, rename
 - The sample Playground has a "Rating metrics" section with an NPS, CSAT, CSAT
   stars, CES and custom rating survey. The `nps-survey` mock now uses the NPS
   metric.
+- Banners can style their own title and description: set `title` and
+  `description` on `WhiskrKitTheme.BannerTheme`. Without them, banners look as
+  before (the `headline` and `subheadline`, the same as the question title).
 
 ### Changed
 - Scale questions without a metric show the neutral blue for the selected score

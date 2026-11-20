@@ -163,15 +163,15 @@ internal fun BannerContent(
                     if (template.title != null) {
                         Text(
                             text = template.title,
-                            style = theme.headline.textStyle,
-                            color = theme.headline.color,
+                            style = theme.bannerTitle.textStyle,
+                            color = theme.bannerTitle.color,
                         )
                     }
                     if (template.description != null) {
                         Text(
                             text = template.description,
-                            style = theme.subheadline.textStyle,
-                            color = theme.subheadline.color,
+                            style = theme.bannerDescription.textStyle,
+                            color = theme.bannerDescription.color,
                         )
                     }
                 }

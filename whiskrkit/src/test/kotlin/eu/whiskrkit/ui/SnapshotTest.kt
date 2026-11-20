@@ -8,6 +8,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -343,6 +346,45 @@ class SnapshotTest {
             onOpenFollowUp = {},
         )
     }
+
+    /** A banner with a question title, the case where the two titles look alike. */
+    @Composable
+    private fun StarsBanner() {
+        BannerContent(
+            template = BannerTemplate(
+                id = "t1",
+                title = "Quick feedback",
+                description = "We'd love to hear from you",
+                survey = SymbolRatingTemplate(
+                    id = "q1",
+                    title = "Rate your experience",
+                    description = "Tap the stars to rate",
+                    isRequired = true,
+                ),
+            ),
+            onDismissRequested = {},
+            onSubmitted = {},
+            onOpenFollowUp = {},
+        )
+    }
+
+    @Test
+    fun banner_starsQuestion() = snap { StarsBanner() }
+
+    @Test
+    fun banner_ownTextStyles() = snap(
+        theme = WhiskrKitTheme(
+            container = WhiskrKitTheme.ContainerTheme(
+                banner = WhiskrKitTheme.BannerTheme(
+                    title = WhiskrKitTheme.TextTheme(
+                        textStyle = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.SemiBold),
+                        color = Color(0xFFE8590C),
+                    ),
+                    description = WhiskrKitTheme.TextTheme(textStyle = TextStyle(fontSize = 12.sp)),
+                ),
+            ),
+        ),
+    ) { StarsBanner() }
 
     @Test
     fun banner_followUpButtons() = snap {

@@ -179,6 +179,11 @@ WhiskrKitHost(
 For complete control over buttons there is a composable escape hatch:
 `WhiskrKitTheme.ButtonAppearance.Custom { text, enabled, onClick -> ... }`.
 
+A banner's own title and description use the `headline` and `subheadline`
+styles, the same as the question title below them. To style them separately, set
+`title` and `description` on `ContainerTheme.banner`:
+`WhiskrKitTheme.BannerTheme(title = WhiskrKitTheme.TextTheme(...))`.
+
 ## Permissions
 
 The SDK's manifest merges two normal-level permissions into your app:
