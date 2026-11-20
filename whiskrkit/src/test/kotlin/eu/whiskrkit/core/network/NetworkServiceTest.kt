@@ -58,7 +58,8 @@ class NetworkServiceTest {
         assertEquals("Bearer test-key", request.getHeader("Authorization"))
         assertEquals("Android", request.getHeader("X-OS-Name"))
         assertEquals("device-123", request.getHeader("X-Device-ID"))
-        assertTrue(request.getHeader("User-Agent")!!.startsWith("WhiskrKit-android/"))
+        assertEquals("android/${eu.whiskrkit.BuildConfig.SDK_VERSION}", request.getHeader("X-WhiskrKit-SDK"))
+        assertEquals("WhiskrKit-android/${eu.whiskrkit.BuildConfig.SDK_VERSION}", request.getHeader("User-Agent"))
     }
 
     @Test
