@@ -46,7 +46,7 @@ internal fun ScaleRatingQuestion(
     showError: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val selectedScore = (answer as? SurveyAnswer.NpsRating)?.score
+    val selectedScore = (answer as? SurveyAnswer.ScaleRating)?.score
     val haptics = LocalHapticFeedback.current
     val theme = LocalWhiskrKitTheme.current
     val selectedLabel = stringResource(R.string.whiskrkit_a11y_selected)
@@ -88,7 +88,7 @@ internal fun ScaleRatingQuestion(
                             )
                             .clickable {
                                 haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                onAnswer(if (isSelected) null else SurveyAnswer.NpsRating(score))
+                                onAnswer(if (isSelected) null else SurveyAnswer.ScaleRating(score))
                             }
                             .semantics {
                                 selected = isSelected

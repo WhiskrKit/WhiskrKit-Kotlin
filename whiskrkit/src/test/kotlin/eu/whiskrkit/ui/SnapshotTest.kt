@@ -76,7 +76,7 @@ class SnapshotTest {
                 ratingRange = ScaleRatingTemplate.RatingRange(0, 10),
                 isRequired = true,
             ),
-            answer = SurveyAnswer.NpsRating(7),
+            answer = SurveyAnswer.ScaleRating(7),
             onAnswer = {},
             showError = false,
         )

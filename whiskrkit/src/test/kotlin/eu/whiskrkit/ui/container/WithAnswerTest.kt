@@ -15,14 +15,14 @@ class WithAnswerTest {
 
     @Test
     fun `selecting a score stores it`() {
-        val response = SurveyResponse().withAnswer("q1", SurveyAnswer.NpsRating(8))
-        assertEquals(SurveyAnswer.NpsRating(8), response.results["q1"])
+        val response = SurveyResponse().withAnswer("q1", SurveyAnswer.ScaleRating(8))
+        assertEquals(SurveyAnswer.ScaleRating(8), response.results["q1"])
     }
 
     @Test
     fun `deselecting a score removes the answer and keeps the others`() {
         val response = SurveyResponse(mapOf("q2" to SurveyAnswer.Text("Keep me")))
-            .withAnswer("q1", SurveyAnswer.NpsRating(8))
+            .withAnswer("q1", SurveyAnswer.ScaleRating(8))
             .withAnswer("q1", null)
         assertNull(response.results["q1"])
         assertEquals(SurveyAnswer.Text("Keep me"), response.results["q2"])

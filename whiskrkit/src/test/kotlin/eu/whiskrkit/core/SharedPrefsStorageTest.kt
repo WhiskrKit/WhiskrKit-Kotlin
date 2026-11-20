@@ -165,6 +165,6 @@ class SharedPrefsStorageTest {
         val loaded = SharedPrefsSubmissionStorage(context).load()
         assertEquals(1, loaded.size)
         assertNull(loaded.single().response.attributes)
-        assertEquals(mapOf("q" to SurveyAnswer.NpsRating(7)), loaded.single().response.results)
+        assertEquals(mapOf("q" to SurveyAnswer.ScaleRating(7)), loaded.single().response.results)
     }
 }

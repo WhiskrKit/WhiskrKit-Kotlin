@@ -131,7 +131,7 @@ class NetworkServiceTest {
 
         service.submitResponse(
             surveyId = "survey-1",
-            response = SurveyResponse(mapOf("q1" to SurveyAnswer.NpsRating(7))),
+            response = SurveyResponse(mapOf("q1" to SurveyAnswer.ScaleRating(7))),
             idempotencyKey = "idem-1",
         )
 
@@ -148,7 +148,7 @@ class NetworkServiceTest {
         service.submitResponse(
             surveyId = "survey-1",
             response = SurveyResponse(
-                results = mapOf("q1" to SurveyAnswer.NpsRating(7)),
+                results = mapOf("q1" to SurveyAnswer.ScaleRating(7)),
                 attributes = mapOf("plan" to AttributeValue.Text("pro"), "sessions" to AttributeValue.Integer(3)),
             ),
             idempotencyKey = "idem-1",

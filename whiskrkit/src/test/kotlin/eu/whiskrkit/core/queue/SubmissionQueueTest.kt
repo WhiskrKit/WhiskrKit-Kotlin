@@ -20,7 +20,7 @@ class SubmissionQueueTest {
 
     private fun submission(surveyId: String = "survey-1") = PendingSubmission(
         surveyId = surveyId,
-        response = SurveyResponse(mapOf("q" to SurveyAnswer.NpsRating(5))),
+        response = SurveyResponse(mapOf("q" to SurveyAnswer.ScaleRating(5))),
         timestamp = currentTime,
         expiresAt = currentTime.plusDays(7),
     )
@@ -132,7 +132,7 @@ class SubmissionQueueTest {
     @Test
     fun `queued submission keeps the attributes it was created with`() {
         val response = SurveyResponse(
-            results = mapOf("q" to SurveyAnswer.NpsRating(5)),
+            results = mapOf("q" to SurveyAnswer.ScaleRating(5)),
             attributes = mapOf("plan" to AttributeValue.Text("free")),
         )
         val pending = PendingSubmission(surveyId = "survey-1", response = response, timestamp = currentTime, expiresAt = currentTime.plusDays(7))
