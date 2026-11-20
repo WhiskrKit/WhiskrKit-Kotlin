@@ -19,6 +19,15 @@
     <string name="whiskrkit_a11y_not_selected">未选择</string>
     <string name="whiskrkit_a11y_text_field">反馈文本框</string>
 
+    <string name="whiskrkit_scale_nps_min">完全不可能</string>
+    <string name="whiskrkit_scale_nps_max">极有可能</string>
+    <string name="whiskrkit_scale_csat_min">非常不满意</string>
+    <string name="whiskrkit_scale_csat_max">非常满意</string>
+    <string name="whiskrkit_scale_ces_min">非常困难</string>
+    <string name="whiskrkit_scale_ces_max">非常容易</string>
+    <string name="whiskrkit_a11y_scale_position">%1$d，共 %2$d</string>
+    <string name="whiskrkit_a11y_scale_end">%1$d 表示“%2$s”</string>
+
     <plurals name="whiskrkit_required_symbol">
         <item quantity="other">请选择 %1$d 到 %2$d 星之间的评分</item>
     </plurals>

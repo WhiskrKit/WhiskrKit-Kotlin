@@ -19,6 +19,15 @@
     <string name="whiskrkit_a11y_not_selected">Non sélectionné</string>
     <string name="whiskrkit_a11y_text_field">Champ de texte pour vos commentaires</string>
 
+    <string name="whiskrkit_scale_nps_min">Pas du tout probable</string>
+    <string name="whiskrkit_scale_nps_max">Extrêmement probable</string>
+    <string name="whiskrkit_scale_csat_min">Très insatisfait</string>
+    <string name="whiskrkit_scale_csat_max">Très satisfait</string>
+    <string name="whiskrkit_scale_ces_min">Très difficile</string>
+    <string name="whiskrkit_scale_ces_max">Très facile</string>
+    <string name="whiskrkit_a11y_scale_position">%1$d sur %2$d</string>
+    <string name="whiskrkit_a11y_scale_end">%1$d signifie « %2$s »</string>
+
     <plurals name="whiskrkit_required_symbol">
         <item quantity="one">Veuillez sélectionner une note entre %1$d et %2$d étoile</item>
         <item quantity="many">Veuillez sélectionner une note entre %1$d et %2$d étoiles</item>

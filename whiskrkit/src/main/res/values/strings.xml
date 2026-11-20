@@ -22,6 +22,16 @@
     <!-- Same in every language, so not translated. -->
     <string name="whiskrkit_char_count" translatable="false">%1$d/%2$d</string>
 
+    <!-- End labels under the first and last option of a scale rating. -->
+    <string name="whiskrkit_scale_nps_min">Not at all likely</string>
+    <string name="whiskrkit_scale_nps_max">Extremely likely</string>
+    <string name="whiskrkit_scale_csat_min">Very dissatisfied</string>
+    <string name="whiskrkit_scale_csat_max">Very satisfied</string>
+    <string name="whiskrkit_scale_ces_min">Very difficult</string>
+    <string name="whiskrkit_scale_ces_max">Very easy</string>
+    <string name="whiskrkit_a11y_scale_position">%1$d out of %2$d</string>
+    <string name="whiskrkit_a11y_scale_end">%1$d is %2$s</string>
+
     <plurals name="whiskrkit_required_symbol">
         <item quantity="one">Select a rating between %1$d and %2$d star</item>
         <item quantity="other">Select a rating between %1$d and %2$d stars</item>

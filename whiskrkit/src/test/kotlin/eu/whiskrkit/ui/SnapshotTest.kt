@@ -16,6 +16,8 @@ import eu.whiskrkit.core.model.BannerTemplate
 import eu.whiskrkit.core.model.FullScreenFormTemplate
 import eu.whiskrkit.core.model.MultipleChoiceOption
 import eu.whiskrkit.core.model.MultipleChoiceTemplate
+import eu.whiskrkit.core.model.RatingDisplayStyle
+import eu.whiskrkit.core.model.RatingMetric
 import eu.whiskrkit.core.model.ScaleRatingTemplate
 import eu.whiskrkit.core.model.SheetTemplate
 import eu.whiskrkit.core.model.SurveyAnswer
@@ -51,6 +53,11 @@ import org.robolectric.annotation.GraphicsMode
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35], qualifiers = "w411dp-h914dp-normal-long-notround-any-440dpi-keyshidden-nonav")
 class SnapshotTest {
+
+    private companion object {
+        /** A small 360dp-wide phone, on top of the class's default device. */
+        const val SMALL_PHONE = "+w360dp-h780dp"
+    }
 
     private fun snap(dark: Boolean = false, theme: WhiskrKitTheme? = null, content: @Composable () -> Unit) {
         captureRoboImage {
@@ -95,6 +102,88 @@ class SnapshotTest {
             onAnswer = {},
             showError = true,
         )
+    }
+
+    // MARK: Rating metrics, on a small (360dp) phone
+
+    private fun metric(
+        metric: RatingMetric,
+        min: Int,
+        max: Int,
+        title: String,
+        displayStyle: RatingDisplayStyle = RatingDisplayStyle.NUMBERS,
+        minLabel: String? = null,
+        maxLabel: String? = null,
+    ) = ScaleRatingTemplate(
+        id = "q1", title = title, ratingRange = ScaleRatingTemplate.RatingRange(min, max), isRequired = true,
+        metric = metric, displayStyle = displayStyle, minLabel = minLabel, maxLabel = maxLabel,
+    )
+
+    private val nps = metric(RatingMetric.NPS, 0, 10, "How likely are you to recommend Stride to a friend?")
+
+    @Composable
+    private fun question(template: ScaleRatingTemplate, score: Int?) = ScaleRatingQuestion(
+        template = template,
+        answer = score?.let { SurveyAnswer.ScaleRating(it) },
+        onAnswer = {},
+        showError = false,
+    )
+
+    @Test
+    @Config(qualifiers = SMALL_PHONE)
+    fun scaleRating_nps() = snap { question(nps, 8) }
+
+    @Test
+    @Config(qualifiers = SMALL_PHONE)
+    fun scaleRating_nps_dark() = snap(dark = true) { question(nps, 8) }
+
+    @Test
+    @Config(qualifiers = SMALL_PHONE, fontScale = 2.0f)
+    fun scaleRating_nps_largeFont() = snap { question(nps, 6) }
+
+    @Test
+    @Config(qualifiers = SMALL_PHONE, fontScale = 2.0f)
+    fun scaleRating_nps_largeFont_dark() = snap(dark = true) { question(nps, 6) }
+
+    @Test
+    @Config(qualifiers = SMALL_PHONE)
+    fun scaleRating_csat() = snap { question(metric(RatingMetric.CSAT, 1, 5, "How satisfied are you with your order?"), 4) }
+
+    @Test
+    @Config(qualifiers = SMALL_PHONE)
+    fun scaleRating_csatStars() = snap {
+        question(metric(RatingMetric.CSAT, 1, 5, "How was your delivery?", RatingDisplayStyle.STARS), 4)
+    }
+
+    @Test
+    @Config(qualifiers = SMALL_PHONE)
+    fun scaleRating_csatStars_dark() = snap(dark = true) {
+        question(metric(RatingMetric.CSAT, 1, 5, "How was your delivery?", RatingDisplayStyle.STARS), 4)
+    }
+
+    @Test
+    @Config(qualifiers = SMALL_PHONE)
+    fun scaleRating_ces() = snap { question(metric(RatingMetric.CES, 1, 7, "How easy was it to change your plan?"), 6) }
+
+    @Test
+    @Config(qualifiers = SMALL_PHONE)
+    fun scaleRating_ces_dark() = snap(dark = true) {
+        question(metric(RatingMetric.CES, 1, 7, "How easy was it to change your plan?"), 6)
+    }
+
+    @Test
+    @Config(qualifiers = SMALL_PHONE)
+    fun scaleRating_customLabels() = snap {
+        question(
+            metric(RatingMetric.CUSTOM, 1, 10, "How did the workout feel?", minLabel = "Way too easy", maxLabel = "Way too hard"),
+            3,
+        )
+    }
+
+    @Test
+    @Config(qualifiers = SMALL_PHONE)
+    fun scaleRating_starsInvalidRange() = snap {
+        question(metric(RatingMetric.CUSTOM, 0, 5, "Rate the playlist", RatingDisplayStyle.STARS), null)
     }
 
     @Test
