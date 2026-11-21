@@ -7,7 +7,10 @@ plugins {
     alias(libs.plugins.maven.publish)
 }
 
-val sdkVersion = "0.2.0"
+// The SDK's only version number: published as the Maven version and sent with
+// every request as BuildConfig.SDK_VERSION. A unit test checks it against the
+// newest version in CHANGELOG.md.
+val sdkVersion = "0.3.0"
 
 android {
     namespace = "eu.whiskrkit"

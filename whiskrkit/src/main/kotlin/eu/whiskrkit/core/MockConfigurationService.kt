@@ -6,6 +6,8 @@ import eu.whiskrkit.core.model.Branding
 import eu.whiskrkit.core.model.FullScreenFormTemplate
 import eu.whiskrkit.core.model.MultipleChoiceOption
 import eu.whiskrkit.core.model.MultipleChoiceTemplate
+import eu.whiskrkit.core.model.RatingDisplayStyle
+import eu.whiskrkit.core.model.RatingMetric
 import eu.whiskrkit.core.model.ScaleRatingTemplate
 import eu.whiskrkit.core.model.SheetTemplate
 import eu.whiskrkit.core.model.SurveyImpressionEvent
@@ -131,15 +133,63 @@ internal class MockConfigurationService : ConfigurationService {
                 isRequired = true,
             ),
         ),
+        // Rating metrics: one sheet per metric and display style (PLAYGROUND_SPEC.md section 4)
         "nps-survey" to SheetTemplate(
             id = "sheet-2",
             title = "Quick question",
             survey = ScaleRatingTemplate(
                 id = "sheet-2-nps",
-                title = "How likely are you to recommend us?",
-                subtitle = "Your feedback helps us improve",
+                title = "How likely are you to recommend Stride to a friend?",
                 ratingRange = ScaleRatingTemplate.RatingRange(min = 0, max = 10),
                 isRequired = true,
+                metric = RatingMetric.NPS,
+            ),
+        ),
+        "csat-survey" to SheetTemplate(
+            id = "sheet-csat",
+            title = "Your order",
+            survey = ScaleRatingTemplate(
+                id = "sheet-csat-survey",
+                title = "How satisfied are you with your order?",
+                ratingRange = ScaleRatingTemplate.RatingRange(min = 1, max = 5),
+                isRequired = true,
+                metric = RatingMetric.CSAT,
+            ),
+        ),
+        "csat-stars-survey" to SheetTemplate(
+            id = "sheet-csat-stars",
+            title = "Your delivery",
+            survey = ScaleRatingTemplate(
+                id = "sheet-csat-stars-survey",
+                title = "How was your delivery?",
+                ratingRange = ScaleRatingTemplate.RatingRange(min = 1, max = 5),
+                isRequired = true,
+                metric = RatingMetric.CSAT,
+                displayStyle = RatingDisplayStyle.STARS,
+            ),
+        ),
+        "ces-survey" to SheetTemplate(
+            id = "sheet-ces",
+            title = "Plan changed",
+            survey = ScaleRatingTemplate(
+                id = "sheet-ces-survey",
+                title = "How easy was it to change your plan?",
+                ratingRange = ScaleRatingTemplate.RatingRange(min = 1, max = 7),
+                isRequired = true,
+                metric = RatingMetric.CES,
+            ),
+        ),
+        "custom-rating-survey" to SheetTemplate(
+            id = "sheet-custom-rating",
+            title = "Workout done",
+            survey = ScaleRatingTemplate(
+                id = "sheet-custom-rating-survey",
+                title = "How did the workout feel?",
+                ratingRange = ScaleRatingTemplate.RatingRange(min = 1, max = 10),
+                isRequired = false,
+                metric = RatingMetric.CUSTOM,
+                minLabel = "Way too easy",
+                maxLabel = "Way too hard",
             ),
         ),
         "text-feedback" to SheetTemplate(

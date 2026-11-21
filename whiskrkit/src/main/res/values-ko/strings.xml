@@ -19,6 +19,15 @@
     <string name="whiskrkit_a11y_not_selected">선택 안 됨</string>
     <string name="whiskrkit_a11y_text_field">피드백 입력란</string>
 
+    <string name="whiskrkit_scale_nps_min">전혀 가능성 없음</string>
+    <string name="whiskrkit_scale_nps_max">매우 가능성 높음</string>
+    <string name="whiskrkit_scale_csat_min">매우 불만족</string>
+    <string name="whiskrkit_scale_csat_max">매우 만족</string>
+    <string name="whiskrkit_scale_ces_min">매우 어려움</string>
+    <string name="whiskrkit_scale_ces_max">매우 쉬움</string>
+    <string name="whiskrkit_a11y_scale_position">%2$d 중 %1$d</string>
+    <string name="whiskrkit_a11y_scale_end">%1$d은(는) ‘%2$s’</string>
+
     <plurals name="whiskrkit_required_symbol">
         <item quantity="other">별 %1$d개에서 %2$d개 사이로 평점을 선택하세요</item>
     </plurals>

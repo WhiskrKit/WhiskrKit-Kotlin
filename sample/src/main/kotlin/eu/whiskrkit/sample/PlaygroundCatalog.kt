@@ -2,12 +2,17 @@ package eu.whiskrkit.sample
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,6 +31,7 @@ internal class SurveyDescriptor(
 ) {
     enum class Group(val title: String) {
         QuestionTypes("Question types"),
+        RatingMetrics("Rating metrics"),
         PresentationStyles("Presentation styles"),
     }
 
@@ -65,6 +71,41 @@ internal class SurveyDescriptor(
                 summary = "Sheet · multi-select options",
                 icon = Icons.Filled.CheckCircle,
                 group = Group.QuestionTypes,
+            ),
+            SurveyDescriptor(
+                id = "nps-survey",
+                name = "NPS",
+                summary = "Sheet · 0–10, red, gold and green",
+                icon = Icons.Filled.Share,
+                group = Group.RatingMetrics,
+            ),
+            SurveyDescriptor(
+                id = "csat-survey",
+                name = "CSAT",
+                summary = "Sheet · 1–5 numbers",
+                icon = Icons.Filled.Face,
+                group = Group.RatingMetrics,
+            ),
+            SurveyDescriptor(
+                id = "csat-stars-survey",
+                name = "CSAT stars",
+                summary = "Sheet · five stars",
+                icon = Icons.Outlined.Star,
+                group = Group.RatingMetrics,
+            ),
+            SurveyDescriptor(
+                id = "ces-survey",
+                name = "CES",
+                summary = "Sheet · 1–7, how easy it was",
+                icon = Icons.Filled.Done,
+                group = Group.RatingMetrics,
+            ),
+            SurveyDescriptor(
+                id = "custom-rating-survey",
+                name = "Custom rating",
+                summary = "Sheet · 1–10 with the server's end labels",
+                icon = Icons.Filled.Build,
+                group = Group.RatingMetrics,
             ),
             SurveyDescriptor(
                 id = "welcome-toast",

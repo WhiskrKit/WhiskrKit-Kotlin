@@ -34,7 +34,7 @@ private class CapturingConfigurationService : ConfigurationService {
 class WhiskrKitAttributesTest {
 
     private val service = CapturingConfigurationService()
-    private val answers = mapOf("q1" to SurveyAnswer.NpsRating(9))
+    private val answers = mapOf("q1" to SurveyAnswer.ScaleRating(9))
 
     @Before
     fun setUp() {

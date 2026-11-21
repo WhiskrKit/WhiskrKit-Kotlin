@@ -19,6 +19,15 @@
     <string name="whiskrkit_a11y_not_selected">Niet geselecteerd</string>
     <string name="whiskrkit_a11y_text_field">Tekstveld voor feedback</string>
 
+    <string name="whiskrkit_scale_nps_min">Helemaal niet waarschijnlijk</string>
+    <string name="whiskrkit_scale_nps_max">Zeer waarschijnlijk</string>
+    <string name="whiskrkit_scale_csat_min">Zeer ontevreden</string>
+    <string name="whiskrkit_scale_csat_max">Zeer tevreden</string>
+    <string name="whiskrkit_scale_ces_min">Zeer moeilijk</string>
+    <string name="whiskrkit_scale_ces_max">Zeer makkelijk</string>
+    <string name="whiskrkit_a11y_scale_position">%1$d van %2$d</string>
+    <string name="whiskrkit_a11y_scale_end">%1$d betekent ‘%2$s’</string>
+
     <plurals name="whiskrkit_required_symbol">
         <item quantity="one">Geef een beoordeling van %1$d tot %2$d ster</item>
         <item quantity="other">Geef een beoordeling van %1$d tot %2$d sterren</item>

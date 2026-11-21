@@ -123,6 +123,8 @@ internal class NetworkService(
             .header("X-Language", deviceInfo.language.ascii())
             .header("X-Region", deviceInfo.region.ascii())
             .header("X-Timezone", deviceInfo.timezone.ascii())
+            // SDK platform and version, in the same format on every platform.
+            .header("X-WhiskrKit-SDK", "android/${BuildConfig.SDK_VERSION}")
             .header("User-Agent", "WhiskrKit-android/${BuildConfig.SDK_VERSION}")
             .header("Cache-Control", "no-cache")
     }

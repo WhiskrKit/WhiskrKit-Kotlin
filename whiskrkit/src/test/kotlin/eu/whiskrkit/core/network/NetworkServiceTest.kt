@@ -58,7 +58,8 @@ class NetworkServiceTest {
         assertEquals("Bearer test-key", request.getHeader("Authorization"))
         assertEquals("Android", request.getHeader("X-OS-Name"))
         assertEquals("device-123", request.getHeader("X-Device-ID"))
-        assertTrue(request.getHeader("User-Agent")!!.startsWith("WhiskrKit-android/"))
+        assertEquals("android/${eu.whiskrkit.BuildConfig.SDK_VERSION}", request.getHeader("X-WhiskrKit-SDK"))
+        assertEquals("WhiskrKit-android/${eu.whiskrkit.BuildConfig.SDK_VERSION}", request.getHeader("User-Agent"))
     }
 
     @Test
@@ -131,7 +132,7 @@ class NetworkServiceTest {
 
         service.submitResponse(
             surveyId = "survey-1",
-            response = SurveyResponse(mapOf("q1" to SurveyAnswer.NpsRating(7))),
+            response = SurveyResponse(mapOf("q1" to SurveyAnswer.ScaleRating(7))),
             idempotencyKey = "idem-1",
         )
 
@@ -148,7 +149,7 @@ class NetworkServiceTest {
         service.submitResponse(
             surveyId = "survey-1",
             response = SurveyResponse(
-                results = mapOf("q1" to SurveyAnswer.NpsRating(7)),
+                results = mapOf("q1" to SurveyAnswer.ScaleRating(7)),
                 attributes = mapOf("plan" to AttributeValue.Text("pro"), "sessions" to AttributeValue.Integer(3)),
             ),
             idempotencyKey = "idem-1",

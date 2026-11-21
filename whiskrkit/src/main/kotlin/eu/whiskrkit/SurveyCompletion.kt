@@ -58,7 +58,7 @@ public data class SurveyCompletion(
         )
 
         private fun SurveyAnswer.toAnswer(questionId: String): Answer? = when (this) {
-            is SurveyAnswer.NpsRating -> Answer(questionId, QuestionType.SCALE_RATING, Value.Score(score))
+            is SurveyAnswer.ScaleRating -> Answer(questionId, QuestionType.SCALE_RATING, Value.Score(score))
             is SurveyAnswer.SymbolRating -> Answer(questionId, QuestionType.SYMBOL_RATING, Value.Score(score))
             is SurveyAnswer.Thumbs -> when (rating) {
                 ThumbsRating.THUMBS_UP -> Answer(questionId, QuestionType.THUMBS_RATING, Value.Thumbs(isUp = true))

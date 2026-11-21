@@ -97,11 +97,31 @@ public class WhiskrKitTheme(
         public val backgroundColor: Color = Color.Unspecified,
     )
 
-    /** Styling for the banner container. */
+    /**
+     * Styling for the banner container.
+     *
+     * [title] and [description] style the banner's own title and description,
+     * above the question. Left `null`, they use [headline] and [subheadline], the
+     * same styles as the question title and subtitle. A partial [TextTheme] falls
+     * back to those for the part it leaves out.
+     */
     @Immutable
     public class BannerTheme(
         public val cornerRadius: Dp = 12.dp,
         public val backgroundColor: Color = Color.Unspecified,
         public val elevation: Dp = 6.dp,
-    )
+        public val title: TextTheme? = null,
+        public val description: TextTheme? = null,
+    ) {
+        /**
+         * The 0.2.0 constructor, kept so code compiled against 0.2.0 still links.
+         * Hidden from Kotlin callers, who get the primary constructor above.
+         */
+        @Deprecated("Kept for binary compatibility", level = DeprecationLevel.HIDDEN)
+        public constructor(
+            cornerRadius: Dp = 12.dp,
+            backgroundColor: Color = Color.Unspecified,
+            elevation: Dp = 6.dp,
+        ) : this(cornerRadius, backgroundColor, elevation, null, null)
+    }
 }

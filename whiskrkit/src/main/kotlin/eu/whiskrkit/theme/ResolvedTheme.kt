@@ -32,6 +32,10 @@ internal data class ResolvedWhiskrTheme(
     val bannerCornerRadius: Dp,
     val bannerBackground: Color,
     val bannerElevation: Dp,
+    /** The banner's own title; the headline unless the theme sets one. */
+    val bannerTitle: ResolvedTextTheme,
+    /** The banner's own description; the subheadline unless the theme sets one. */
+    val bannerDescription: ResolvedTextTheme,
 )
 
 @Immutable
@@ -94,11 +98,14 @@ internal fun resolveWhiskrTheme(overrides: WhiskrKitTheme?): ResolvedWhiskrTheme
         )
     }
 
+    val headline = text(overrides?.headline, typography.titleMedium, colors.onSurface)
+    val subheadline = text(overrides?.subheadline, typography.bodyMedium, colors.onSurfaceVariant)
+
     return ResolvedWhiskrTheme(
         title = text(overrides?.title, typography.titleLarge, colors.onSurface),
         subtitle = text(overrides?.subtitle, typography.titleMedium, colors.onSurfaceVariant),
-        headline = text(overrides?.headline, typography.titleMedium, colors.onSurface),
-        subheadline = text(overrides?.subheadline, typography.bodyMedium, colors.onSurfaceVariant),
+        headline = headline,
+        subheadline = subheadline,
         body = text(overrides?.body, typography.bodyLarge, colors.onSurface),
         primaryButton = button(overrides?.button?.primary, colors.primary, colors.onPrimary),
         secondaryButton = button(overrides?.button?.secondary, Color.Transparent, colors.primary),
@@ -114,5 +121,9 @@ internal fun resolveWhiskrTheme(overrides: WhiskrKitTheme?): ResolvedWhiskrTheme
         bannerBackground = (overrides?.container?.banner?.backgroundColor ?: Color.Unspecified)
             .takeOrElse { colors.surfaceContainerHigh },
         bannerElevation = overrides?.container?.banner?.elevation ?: 6.dp,
+        bannerTitle = overrides?.container?.banner?.title
+            ?.let { text(it, headline.textStyle, headline.color) } ?: headline,
+        bannerDescription = overrides?.container?.banner?.description
+            ?.let { text(it, subheadline.textStyle, subheadline.color) } ?: subheadline,
     )
 }

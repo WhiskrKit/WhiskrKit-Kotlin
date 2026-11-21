@@ -21,7 +21,7 @@ class SubmissionRetryCoordinatorTest {
     private fun enqueue(surveyId: String = "survey-1"): PendingSubmission {
         val submission = PendingSubmission(
             surveyId = surveyId,
-            response = SurveyResponse(mapOf("q" to SurveyAnswer.NpsRating(5))),
+            response = SurveyResponse(mapOf("q" to SurveyAnswer.ScaleRating(5))),
             timestamp = currentTime,
             expiresAt = currentTime.plusDays(7),
         )

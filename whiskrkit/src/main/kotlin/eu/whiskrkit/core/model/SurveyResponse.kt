@@ -38,7 +38,11 @@ internal data class SurveyResponse(
 
 @Serializable(with = SurveyAnswerSerializer::class)
 internal sealed interface SurveyAnswer {
-    data class NpsRating(val score: Int) : SurveyAnswer
+    /**
+     * A scale rating score. Encoded under the `npsRating` key, which predates
+     * rating metrics; the key must stay the same for servers and stored data.
+     */
+    data class ScaleRating(val score: Int) : SurveyAnswer
     data class SymbolRating(val score: Int) : SurveyAnswer
     data class Thumbs(val rating: ThumbsRating) : SurveyAnswer
     data class Text(val feedback: String) : SurveyAnswer
@@ -58,7 +62,7 @@ internal enum class ThumbsRating {
 }
 
 internal object SurveyAnswerSerializer : KSerializer<SurveyAnswer> {
-    private const val NPS = "npsRating"
+    private const val SCALE = "npsRating"
     private const val SYMBOL = "symbolRating"
     private const val THUMBS = "thumbsRating"
     private const val TEXT = "textualSurvey"
@@ -71,7 +75,7 @@ internal object SurveyAnswerSerializer : KSerializer<SurveyAnswer> {
         val jsonEncoder = encoder as? JsonEncoder
             ?: throw SerializationException("SurveyAnswer supports JSON only")
         val element = when (value) {
-            is SurveyAnswer.NpsRating -> buildJsonObject { put(NPS, value.score) }
+            is SurveyAnswer.ScaleRating -> buildJsonObject { put(SCALE, value.score) }
             is SurveyAnswer.SymbolRating -> buildJsonObject { put(SYMBOL, value.score) }
             is SurveyAnswer.Thumbs -> buildJsonObject {
                 put(THUMBS, jsonEncoder.json.encodeToJsonElement(ThumbsRating.serializer(), value.rating))
@@ -89,7 +93,7 @@ internal object SurveyAnswerSerializer : KSerializer<SurveyAnswer> {
             ?: throw SerializationException("SurveyAnswer supports JSON only")
         val obj = jsonDecoder.decodeJsonElement().jsonObject
         return when {
-            NPS in obj -> SurveyAnswer.NpsRating(obj.getValue(NPS).jsonPrimitive.int)
+            SCALE in obj -> SurveyAnswer.ScaleRating(obj.getValue(SCALE).jsonPrimitive.int)
             SYMBOL in obj -> SurveyAnswer.SymbolRating(obj.getValue(SYMBOL).jsonPrimitive.int)
             THUMBS in obj -> SurveyAnswer.Thumbs(
                 jsonDecoder.json.decodeFromJsonElement(ThumbsRating.serializer(), obj.getValue(THUMBS)),

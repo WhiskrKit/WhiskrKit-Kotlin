@@ -19,6 +19,15 @@
     <string name="whiskrkit_a11y_not_selected">未選択</string>
     <string name="whiskrkit_a11y_text_field">フィードバック入力欄</string>
 
+    <string name="whiskrkit_scale_nps_min">まったく可能性がない</string>
+    <string name="whiskrkit_scale_nps_max">非常に可能性が高い</string>
+    <string name="whiskrkit_scale_csat_min">非常に不満</string>
+    <string name="whiskrkit_scale_csat_max">非常に満足</string>
+    <string name="whiskrkit_scale_ces_min">非常に難しい</string>
+    <string name="whiskrkit_scale_ces_max">非常に簡単</string>
+    <string name="whiskrkit_a11y_scale_position">%2$d中%1$d</string>
+    <string name="whiskrkit_a11y_scale_end">%1$dは「%2$s」</string>
+
     <plurals name="whiskrkit_required_symbol">
         <item quantity="other">星%1$d〜%2$d個で評価を選んでください</item>
     </plurals>

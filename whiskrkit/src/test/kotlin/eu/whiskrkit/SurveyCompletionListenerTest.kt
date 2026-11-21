@@ -65,7 +65,7 @@ class SurveyCompletionListenerTest {
                 mapOf(
                     "s1-q10" to SurveyAnswer.MultipleChoice(listOf("a", "c")),
                     "s1-q2" to SurveyAnswer.SymbolRating(4),
-                    "s1-q1" to SurveyAnswer.NpsRating(9),
+                    "s1-q1" to SurveyAnswer.ScaleRating(9),
                     "s1-q3" to SurveyAnswer.Thumbs(ThumbsRating.THUMBS_DOWN),
                     "s1-q4" to SurveyAnswer.Text("Great"),
                 ),
@@ -101,7 +101,7 @@ class SurveyCompletionListenerTest {
         val events = mutableListOf<String>()
         WhiskrKit.setOnSurveyCompletedListener { events += "listener" }
         service.onSubmit = { events += "network" }
-        WhiskrKit.submitSurveyResponse("s", SurveyResponse(mapOf("q" to SurveyAnswer.NpsRating(5))))
+        WhiskrKit.submitSurveyResponse("s", SurveyResponse(mapOf("q" to SurveyAnswer.ScaleRating(5))))
         assertEquals(listOf("listener", "network"), events)
     }
 
@@ -115,7 +115,7 @@ class SurveyCompletionListenerTest {
     @Test
     fun `does not fire before WhiskrKit is initialized`() = runTest {
         WhiskrKit.configurationService = null
-        WhiskrKit.submitSurveyResponse("s", SurveyResponse(mapOf("q" to SurveyAnswer.NpsRating(5))))
+        WhiskrKit.submitSurveyResponse("s", SurveyResponse(mapOf("q" to SurveyAnswer.ScaleRating(5))))
         assertTrue(received.isEmpty())
     }
 

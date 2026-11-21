@@ -20,8 +20,8 @@ class SurveyResponseSerializationTest {
         WireJson.decodeFromString(SurveyResponse.serializer(), json)
 
     @Test
-    fun `nps rating encodes as npsRating key`() {
-        val response = SurveyResponse(mapOf("q1" to SurveyAnswer.NpsRating(7)))
+    fun `scale rating encodes exactly as before the rename, under the npsRating key`() {
+        val response = SurveyResponse(mapOf("q1" to SurveyAnswer.ScaleRating(7)))
         assertEquals("""{"results":{"q1":{"npsRating":7}}}""", encode(response))
     }
 
@@ -55,7 +55,7 @@ class SurveyResponseSerializationTest {
     fun `all answer types round-trip`() {
         val original = SurveyResponse(
             mapOf(
-                "nps" to SurveyAnswer.NpsRating(9),
+                "nps" to SurveyAnswer.ScaleRating(9),
                 "stars" to SurveyAnswer.SymbolRating(5),
                 "thumbs" to SurveyAnswer.Thumbs(ThumbsRating.THUMBS_DOWN),
                 "text" to SurveyAnswer.Text("feedback with émoji 🎉"),
@@ -80,7 +80,7 @@ class SurveyResponseSerializationTest {
     @Test
     fun `attributes encode as plain JSON primitives next to results`() {
         val response = SurveyResponse(
-            results = mapOf("q1" to SurveyAnswer.NpsRating(7)),
+            results = mapOf("q1" to SurveyAnswer.ScaleRating(7)),
             attributes = linkedMapOf(
                 "plan" to AttributeValue.Text("pro"),
                 "sessions" to AttributeValue.Integer(3),
@@ -102,7 +102,7 @@ class SurveyResponseSerializationTest {
 
     @Test
     fun `null attributes are omitted`() {
-        assertEquals("""{"results":{"q1":{"npsRating":7}}}""", encode(SurveyResponse(mapOf("q1" to SurveyAnswer.NpsRating(7)), attributes = null)))
+        assertEquals("""{"results":{"q1":{"npsRating":7}}}""", encode(SurveyResponse(mapOf("q1" to SurveyAnswer.ScaleRating(7)), attributes = null)))
     }
 
     @Test
